@@ -50,7 +50,7 @@ public class Auth2Controller {
             newUser.setPasswordHash("");
             newUser.setOauthProvider("google");
             newUser.setRole(
-                    roleRepository.findByName("Клиент")
+                    roleRepository.findByName("CLIENT")
                             .orElseThrow(() -> new RuntimeException("Роль 'Клиент' не найдена"))
             );
             newUser.setStatus(
