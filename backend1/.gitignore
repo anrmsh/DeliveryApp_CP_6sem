@@ -31,3 +31,9 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# Spring config
+backend1/src/main/resources/application.properties
+
+frontend/node_modules
+frontend/delivery-frontend/node_modules

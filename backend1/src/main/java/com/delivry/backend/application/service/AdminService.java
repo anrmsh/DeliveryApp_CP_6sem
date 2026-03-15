@@ -108,7 +108,7 @@ public class AdminService {
         User user = findUserOrThrow(id);
         String roleName = user.getRole().getName();
 
-        if ("ADMIN".equals(roleName) || "CLIENT".equals(roleName)) {
+        if ("ADMIN".equals(roleName)) {
             throw new IllegalArgumentException("Нельзя удалить пользователя с ролью: " + roleName);
         }
 

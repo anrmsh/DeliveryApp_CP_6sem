@@ -7,6 +7,8 @@ import com.delivry.backend.domain.repository.RoleRepository;
 import com.delivry.backend.domain.repository.UserRepository;
 import com.delivry.backend.domain.repository.UserStatusRepository;
 import com.delivry.backend.infrastructure.security.JwtTokenUtil;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.*;
@@ -55,6 +57,23 @@ public class AuthController {
             return ResponseEntity.badRequest().body("Неверный email или пароль");
         }
     }
+
+    // ─────────────────────────────────────────
+// POST /api/auth/logout
+// ─────────────────────────────────────────
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(HttpServletRequest request, HttpServletResponse response) {
+        // Удаляем сессию (если используется сессия)
+        if (request.getSession(false) != null) {
+            request.getSession().invalidate();
+        }
+
+        // Если используешь JWT, можно на фронте просто удалить токен из localStorage
+        return ResponseEntity.noContent().build();
+    }
+
+
+
 
     // ─────────────────────────────────────────
     // POST /api/auth/register
