@@ -1,0 +1,11 @@
+.client-layout {
+  display: flex;
+}
+
+.client-content {
+  margin-left: 240px;
+  padding: 30px;
+  width: 100%;
+  background: #feffff;
+  min-height: 100vh;
+}

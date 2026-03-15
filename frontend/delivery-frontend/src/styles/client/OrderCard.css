@@ -1,0 +1,31 @@
+.order-card {
+
+background:#f5f7ff;
+
+padding:20px;
+
+border-radius:12px;
+
+margin-bottom:20px;
+
+box-shadow:0 10px 20px rgba(0,0,0,0.05);
+
+}
+
+.order-header{
+
+display:flex;
+
+justify-content:space-between;
+
+}
+
+.status{
+
+background:#e8edff;
+
+padding:5px 10px;
+
+border-radius:8px;
+
+}
