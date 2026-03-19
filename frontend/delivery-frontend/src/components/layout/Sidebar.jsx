@@ -32,24 +32,13 @@ export default function Sidebar() {
         <nav>
           <Link to="/admin">
             <i className="bx bx-bar-chart-alt-2"></i>
-            {open && <span>Dashboard</span>}
+            {open && <span>Главная</span>}
           </Link>
           <Link to="/admin/users">
             <i className="bx bx-user"></i>
             {open && <span>Пользователи</span>}
           </Link>
-          <Link to="/admin/routes">
-            <i className="bx bx-map"></i>
-            {open && <span>Маршруты</span>}
-          </Link>
-          <Link to="/admin/weather">
-            <i className="bx bx-cloud-light-rain"></i>
-            {open && <span>Погода</span>}
-          </Link>
-          <Link to="/admin/traffic">
-            <i className="bx bx-car"></i>
-            {open && <span>Пробки</span>}
-          </Link>
+          
         </nav>
 
         <div className="sidebar-bottom">

@@ -1,0 +1,485 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+/* ── TOKENS ── */
+.lp-root {
+  --green:       #16a34a;
+  --green-light: #22c55e;
+  --teal:        #0d9488;
+  --teal-light:  #14b8a6;
+  --deep:        #0a2016;
+  --white:       #ffffff;
+  --muted:       #6b7280;
+  --page-bg:     #fafffe;
+  font-family: 'DM Sans', sans-serif;
+  background: var(--page-bg);
+  color: var(--deep);
+  overflow-x: hidden;
+}
+
+/* ── NAV ── */
+.lp-nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 200;
+  background: rgba(250,255,254,0.88);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(20,184,166,0.12);
+}
+
+.lp-nav-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 14px 32px;
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.lp-nav-logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--deep);
+  flex-shrink: 0;
+}
+
+.lp-nav-logo span {
+  background: linear-gradient(120deg, var(--teal), var(--green-light));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.lp-nav-links {
+  flex: 1;
+  display: flex;
+  gap: 28px;
+}
+
+.lp-nav-links a {
+  text-decoration: none;
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.lp-nav-links a:hover { color: var(--teal); }
+
+.lp-nav-cta { display: flex; gap: 10px; }
+
+/* ── BUTTONS ── */
+.lp-btn-primary {
+  background: linear-gradient(135deg, var(--teal), #0f766e);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  padding: 10px 22px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.22s;
+  box-shadow: 0 4px 14px rgba(13,148,136,0.3);
+}
+
+.lp-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(13,148,136,0.4);
+}
+
+.lp-btn-ghost {
+  background: transparent;
+  color: var(--deep);
+  border: 1px solid rgba(13,148,136,0.3);
+  border-radius: 12px;
+  padding: 10px 22px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.22s;
+}
+
+.lp-btn-ghost:hover {
+  border-color: var(--teal);
+  color: var(--teal);
+  background: rgba(13,148,136,0.05);
+}
+
+.lp-btn-lg { padding: 14px 32px; font-size: 1rem; border-radius: 14px; }
+
+/* ── HERO ── */
+.lp-hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  position: relative;
+  padding: 120px 32px 80px;
+}
+
+.lp-hero-bg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.lp-hero-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.18;
+}
+
+.lp-hero-blob--1 {
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, var(--teal), transparent);
+  top: -100px; right: -100px;
+}
+
+.lp-hero-blob--2 {
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, var(--green-light), transparent);
+  bottom: 0; left: 100px;
+}
+
+.lp-hero-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(13,148,136,0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(13,148,136,0.05) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+.lp-hero-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+.lp-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(13,148,136,0.1);
+  border: 1px solid rgba(13,148,136,0.25);
+  color: var(--teal);
+  border-radius: 99px;
+  padding: 6px 16px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  margin-bottom: 24px;
+}
+
+.lp-hero-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2.8rem, 6vw, 5.5rem);
+  font-weight: 800;
+  line-height: 1.1;
+  margin: 0 0 24px;
+  color: var(--deep);
+  max-width: 700px;
+}
+
+.lp-hero-title em {
+  font-style: italic;
+  background: linear-gradient(120deg, var(--teal), var(--green-light));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.lp-hero-sub {
+  font-size: 1.15rem;
+  color: var(--muted);
+  max-width: 520px;
+  line-height: 1.7;
+  margin-bottom: 40px;
+}
+
+.lp-hero-actions { display: flex; gap: 14px; margin-bottom: 60px; flex-wrap: wrap; }
+
+/* ── HERO TRUCK VISUAL ── */
+.lp-hero-trucks {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-top: 10px;
+  max-width: 600px;
+}
+
+.lp-route-line {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.lp-route-dot {
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: var(--teal);
+  flex-shrink: 0;
+  box-shadow: 0 0 8px var(--teal);
+}
+
+.lp-route-dot--end { background: var(--green); box-shadow: 0 0 8px var(--green); }
+
+.lp-route-dashes {
+  flex: 1;
+  border-top: 2px dashed rgba(13,148,136,0.35);
+}
+
+/* ── STATS BAND ── */
+.lp-stats {
+  background: linear-gradient(135deg, var(--teal), #0f766e);
+  padding: 48px 32px;
+}
+
+.lp-stats-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+.lp-stat { text-align: center; }
+
+.lp-stat-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.4rem;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 4px;
+}
+
+.lp-stat-label {
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.7);
+  font-weight: 400;
+}
+
+/* ── SECTIONS COMMON ── */
+.lp-section-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 80px 32px;
+}
+
+.lp-section-tag {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--teal);
+  background: rgba(13,148,136,0.1);
+  border-radius: 99px;
+  padding: 4px 14px;
+  margin-bottom: 14px;
+}
+
+.lp-section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.8rem, 3vw, 2.8rem);
+  font-weight: 800;
+  color: var(--deep);
+  margin: 0 0 48px;
+  max-width: 560px;
+}
+
+/* ── FEATURES GRID ── */
+.lp-features { background: var(--page-bg); }
+
+.lp-features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.lp-feature-card {
+  background: #fff;
+  border: 1px solid rgba(13,148,136,0.12);
+  border-radius: 20px;
+  padding: 28px;
+  transition: transform 0.22s, box-shadow 0.22s;
+}
+
+.lp-feature-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 40px rgba(13,148,136,0.12);
+}
+
+.lp-feature-icon { font-size: 2rem; margin-bottom: 14px; display: block; }
+
+.lp-feature-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--deep);
+  margin-bottom: 8px;
+}
+
+.lp-feature-text { font-size: 0.875rem; color: var(--muted); line-height: 1.65; margin: 0; }
+
+/* ── HOW IT WORKS ── */
+.lp-how { background: #f0fdf4; }
+
+.lp-steps {
+  display: flex;
+  gap: 0;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.lp-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  flex: 1;
+  min-width: 200px;
+  position: relative;
+}
+
+.lp-step-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 3rem;
+  font-weight: 800;
+  color: rgba(13,148,136,0.15);
+  line-height: 1;
+  flex-shrink: 0;
+  min-width: 60px;
+}
+
+.lp-step-content h3 { font-size: 0.95rem; font-weight: 700; margin: 0 0 6px; color: var(--deep); }
+.lp-step-content p  { font-size: 0.84rem; color: var(--muted); line-height: 1.6; margin: 0; }
+
+.lp-step-arrow {
+  font-size: 1.5rem;
+  color: rgba(13,148,136,0.3);
+  padding: 6px 8px;
+  flex-shrink: 0;
+  align-self: center;
+}
+
+/* ── VEHICLES ── */
+.lp-vehicles { background: var(--page-bg); }
+
+.lp-vehicle-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+.lp-vehicle-card {
+  background: #fff;
+  border: 2px solid rgba(13,148,136,0.12);
+  border-radius: 24px;
+  padding: 32px 24px;
+  text-align: center;
+  transition: transform 0.22s, box-shadow 0.22s;
+  position: relative;
+}
+
+.lp-vehicle-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 48px rgba(13,148,136,0.12);
+}
+
+.lp-vehicle-card--featured {
+  border-color: var(--teal);
+  box-shadow: 0 8px 32px rgba(13,148,136,0.15);
+}
+
+.lp-vehicle-badge {
+  position: absolute;
+  top: -12px; left: 50%; transform: translateX(-50%);
+  background: linear-gradient(135deg, var(--teal), #0f766e);
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 4px 14px;
+  border-radius: 99px;
+  white-space: nowrap;
+}
+
+.lp-vehicle-card svg { margin-bottom: 16px; }
+
+.lp-vehicle-card h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--deep);
+  margin-bottom: 14px;
+}
+
+.lp-vehicle-card ul {
+  list-style: none;
+  padding: 0; margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.lp-vehicle-card li {
+  font-size: 0.84rem;
+  color: var(--muted);
+  padding: 4px 0;
+  border-bottom: 1px solid rgba(13,148,136,0.07);
+}
+
+.lp-vehicle-card li:last-child { border-bottom: none; }
+
+/* ── CTA ── */
+.lp-cta {
+  background: linear-gradient(135deg, var(--deep), #0d3d26);
+  padding: 100px 32px;
+  text-align: center;
+}
+
+.lp-cta-inner { max-width: 600px; margin: 0 auto; }
+
+.lp-cta h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.4rem;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 16px;
+}
+
+.lp-cta p { color: rgba(255,255,255,0.6); font-size: 1rem; margin-bottom: 36px; }
+
+/* ── FOOTER ── */
+.lp-footer {
+  background: var(--deep);
+  border-top: 1px solid rgba(255,255,255,0.07);
+  padding: 28px 32px;
+}
+
+.lp-footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.lp-footer-brand {
+  font-size: 1rem;
+  color: rgba(255,255,255,0.8);
+}
+
+.lp-footer-copy { font-size: 0.8rem; color: rgba(255,255,255,0.4); margin: 0; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  .lp-nav-links  { display: none; }
+  .lp-stats-inner { grid-template-columns: 1fr 1fr; }
+  .lp-steps { flex-direction: column; }
+  .lp-step-arrow { display: none; }
+}

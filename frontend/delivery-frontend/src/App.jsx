@@ -13,22 +13,19 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import UsersPage from "./pages/admin/UsersPage";
 
 import PrivateRoute from "./routes/PrivateRoute";
-import ClientLayout from "./layouts/ClientLayout";
+import ClientLayout from "../src/components/layout/ClientLayout";
 
-import Dashboard from "./pages/client/Dashboard";
+import Dashboard from "./pages/client/ClientDashboard";
+import OrdersHistory from "./pages/client/OrderList";
 import CreateOrder from "./pages/client/CreateOrder";
-import OrdersHistory from "./pages/client/OrderHistory";
 import OrderTracking from "./pages/client/OrderTracking";
 import Notifications from "./pages/client/Notifications";
+import OrderDetail from "./pages/client/OrderDetail";
 
 function App() {
-
   return (
-
     <Router>
-
       <Routes>
-
         <Route path="/" element={<Navigate to="/login" />} />
 
         <Route path="/login" element={<LoginPage />} />
@@ -55,11 +52,8 @@ function App() {
           }
         />
 
-
-
-
         {/* CLIENT */}
-<Route
+        <Route
           path="/client"
           element={
             <ClientLayout>
@@ -96,6 +90,15 @@ function App() {
         />
 
         <Route
+          path="/client/orders/:id"
+          element={
+            <ClientLayout>
+              <OrderDetail />
+            </ClientLayout>
+          }
+        />
+
+        <Route
           path="/client/notifications"
           element={
             <ClientLayout>
@@ -106,11 +109,8 @@ function App() {
 
         {/* CLIENT */}
       </Routes>
-
     </Router>
-
   );
-
 }
 
 export default App;

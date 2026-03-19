@@ -1,11 +1,11 @@
 .client-layout {
   display: flex;
+  min-height: 100vh;
+  background: #f0fdf4;
 }
 
 .client-content {
-  margin-left: 240px;
-  padding: 30px;
-  width: 100%;
-  background: #feffff;
+  flex: 1;
   min-height: 100vh;
+  overflow-x: hidden;
 }
