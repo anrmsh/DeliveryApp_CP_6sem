@@ -32,6 +32,7 @@ public interface DeliveryOrderRepository extends JpaRepository<DeliveryOrder, Lo
             @Param("to")   LocalDateTime to
     );
 
-
+     @Query("SELECT COUNT(o) FROM DeliveryOrder o WHERE o.status.name = :name")
+     long countByStatusName(@Param("name") String name);
 
 }

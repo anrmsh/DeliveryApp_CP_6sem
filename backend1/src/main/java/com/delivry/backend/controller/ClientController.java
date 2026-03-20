@@ -1,11 +1,14 @@
 package com.delivry.backend.controller;
 
 import com.delivry.backend.application.service.ClientService;
-
+import com.delivry.backend.request.client.ChangePasswordRequest;
 import com.delivry.backend.request.client.CreateOrderRequest;
 import com.delivry.backend.request.client.RatingRequest;
+import com.delivry.backend.request.client.UpdateProfileRequest;
 import com.delivry.backend.response.client.DeliveryOrderResponse;
 import com.delivry.backend.response.client.DeliveryPriceResponse;
+import com.delivry.backend.response.client.NotificationResponse;
+import com.delivry.backend.response.client.ProfileResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,39 +28,71 @@ public class ClientController {
         this.clientService = clientService;
     }
 
-    // Создать заказ
+    // ── Заказы ────────────────────────────────────────────────────────────
+
     @PostMapping("/orders")
     public DeliveryOrderResponse createOrder(
-            @Valid @RequestBody CreateOrderRequest request
-    ){
+            @Valid @RequestBody CreateOrderRequest request) {
         return clientService.createOrder(request);
     }
 
-    // История заказов
     @GetMapping("/orders")
-    public List<DeliveryOrderResponse> getMyOrders(){
+    public List<DeliveryOrderResponse> getMyOrders() {
         return clientService.getMyOrders();
     }
 
-    // Один заказ
     @GetMapping("/orders/{id}")
-    public DeliveryOrderResponse getOrder(@PathVariable Long id){
+    public DeliveryOrderResponse getOrder(@PathVariable Long id) {
         return clientService.getOrder(id);
     }
 
-    // Расчет стоимости
     @PostMapping("/calculate")
     public DeliveryPriceResponse calculate(
-            @RequestBody CreateOrderRequest request
-    ){
+            @RequestBody CreateOrderRequest request) {
         return clientService.calculatePrice(request);
     }
 
-    // Оставить рейтинг
     @PostMapping("/rating")
-    public void rateCourier(
-            @RequestBody RatingRequest request
-    ){
+    public void rateCourier(@RequestBody RatingRequest request) {
         clientService.rateCourier(request);
+    }
+
+    // ── Уведомления ───────────────────────────────────────────────────────
+
+    /** Получить все уведомления текущего пользователя (новые первыми) */
+    @GetMapping("/notifications")
+    public List<NotificationResponse> getNotifications() {
+        return clientService.getNotifications();
+    }
+
+    /** Пометить одно уведомление прочитанным */
+    @PatchMapping("/notifications/{id}/read")
+    public void markNotificationRead(@PathVariable Long id) {
+        clientService.markNotificationRead(id);
+    }
+
+    /** Пометить все уведомления прочитанными */
+    @PatchMapping("/notifications/read-all")
+    public void markAllNotificationsRead() {
+        clientService.markAllNotificationsRead();
+    }
+
+    // ── Профиль ───────────────────────────────────────────────────────────
+
+    @GetMapping("/profile")
+    public ProfileResponse getProfile() {
+        return clientService.getProfile();
+    }
+
+    @PutMapping("/profile")
+    public ProfileResponse updateProfile(
+            @Valid @RequestBody UpdateProfileRequest request) {
+        return clientService.updateProfile(request);
+    }
+
+    @PostMapping("/profile/change-password")
+    public void changePassword(
+            @Valid @RequestBody ChangePasswordRequest request) {
+        clientService.changePassword(request);
     }
 }

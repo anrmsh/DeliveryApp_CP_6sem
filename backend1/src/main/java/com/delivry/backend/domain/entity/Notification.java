@@ -8,8 +8,6 @@ import java.time.LocalDateTime;
 @Table(name = "notification")
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 @Builder
 public class Notification {
 
@@ -78,4 +76,17 @@ public class Notification {
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
+
+    public Notification() {}
+
+    public Notification(Long id, User user, String title, String message, Integer statusNotification, LocalDateTime createdAt) {
+        this.id = id;
+        this.user = user;
+        this.title = title;
+        this.message = message;
+        this.statusNotification = statusNotification;
+        this.createdAt = createdAt;
+    }
+
+
 }

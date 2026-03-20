@@ -24,4 +24,6 @@ public interface CourierRatingsRepository extends JpaRepository<CourierRating, L
 
     // Оценки по маршруту
     List<CourierRating> findByRouteId(Long routeId);
+
+    List<CourierRating> findByCourierId(Long courierId);
 }

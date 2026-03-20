@@ -45,4 +45,5 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
 
     @Query("SELECT COUNT(u) FROM User u WHERE u.status.name = 'Заблокирован'")
     long countBlockedUsers();
+
 }

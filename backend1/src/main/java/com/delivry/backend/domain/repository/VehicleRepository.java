@@ -25,4 +25,7 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
             @Param("minCapacity") BigDecimal minCapacity,
             @Param("minVolume")   BigDecimal minVolume
     );
+
+    @Query("SELECT COUNT(v) FROM Vehicle v WHERE v.status.name = :name")
+     long countByStatusName(@Param("name") String name);
 }

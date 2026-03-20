@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 @Repository
@@ -25,4 +26,6 @@ public interface RoutePointRepository extends JpaRepository<RoutePoint, Long> {
 
     // Точки по конкретному заказу
     List<RoutePoint> findByOrderId(Long orderId);
+
+    List<Object> findByRouteIdOrderBySequenceNumber(Long id);
 }

@@ -41,4 +41,8 @@ public interface RouteSheetRepository extends JpaRepository<RouteSheet, Long> {
     @Query("SELECT r FROM RouteSheet r WHERE r.courier.id = :courierId " +
             "AND r.status.name NOT IN ('Завершён', 'Отменён')")
     List<RouteSheet> findActiveRoutesForCourier(@Param("courierId") Long courierId);
+
+
+    @Query("SELECT COUNT(r) FROM RouteSheet r WHERE r.status.name = :name")
+    long countByStatusName(@Param("name") String name);
 }
