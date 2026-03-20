@@ -21,6 +21,16 @@ import CreateOrder from "./pages/client/CreateOrder";
 import OrderTracking from "./pages/client/OrderTracking";
 import Notifications from "./pages/client/Notifications";
 import OrderDetail from "./pages/client/OrderDetail";
+import ProfilePage from "./pages/client/ProfilePage";
+
+import LogistLayout from "./components/logist/LogistSidebar";
+import LogistDashboard from "./pages/logist/LogistDashboard";
+import LogistOrders from "./pages/logist/LogistOrders";
+import LogistRoutes from "./pages/logist/LogistRoutes";
+import CreateRoute from "./pages/logist/CreateRoute";
+import LogistVehicles from "./pages/logist/LogistVehicles";
+import LogistCouriers from "./pages/logist/LogistCouriers";
+import LogistReports from "./pages/logist/LogistReports";
 
 function App() {
   return (
@@ -106,8 +116,72 @@ function App() {
             </ClientLayout>
           }
         />
+        <Route
+          path="/profile"
+          element={
+            <ClientLayout>
+              <ProfilePage />
+            </ClientLayout>
+          }
+        />
+        {/* LOGIST*/}
 
-        {/* CLIENT */}
+        <Route
+          path="/logist"
+          element={
+            <PrivateRoute>
+              <LogistDashboard />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/logist/orders"
+          element={
+            <PrivateRoute>
+              <LogistOrders />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/logist/routes"
+          element={
+            <PrivateRoute>
+              <LogistRoutes />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/logist/routes/new"
+          element={
+            <PrivateRoute>
+              <CreateRoute />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/logist/vehicles"
+          element={
+            <PrivateRoute>
+              <LogistVehicles />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/logist/couriers"
+          element={
+            <PrivateRoute>
+              <LogistCouriers />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/logist/reports"
+          element={
+            <PrivateRoute>
+              <LogistReports />
+            </PrivateRoute>
+          }
+        />
       </Routes>
     </Router>
   );

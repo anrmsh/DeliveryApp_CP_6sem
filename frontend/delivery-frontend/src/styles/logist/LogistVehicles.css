@@ -1,0 +1,145 @@
+/* ═══════════════════════════════════════════════════════════════════
+   LogistVehicles.css
+   ═══════════════════════════════════════════════════════════════════ */
+.lgv-root {
+  font-family: "DM Sans", sans-serif;
+  background: #f0f4ff;
+  min-height: 100vh;
+  padding: 32px 36px;
+  color: #1e3a5f;
+}
+.lgv-hero {
+  margin-bottom: 24px;
+}
+.lgv-title {
+  font-family: "Playfair Display", serif;
+  font-size: 2.1rem;
+  font-weight: 800;
+  margin: 0 0 4px;
+}
+.lgv-sub {
+  font-size: 0.88rem;
+  color: #6b7280;
+  margin: 0;
+}
+.lgv-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+.lgv-filters {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.lgv-filter {
+  border: 1px solid #dbeafe;
+  border-radius: 99px;
+  padding: 5px 14px;
+  background: #fff;
+  font-family: "DM Sans", sans-serif;
+  font-size: 0.8rem;
+  cursor: pointer;
+  color: #6b7280;
+  transition: all 0.18s;
+  font-weight: 500;
+}
+.lgv-filter:hover {
+  border-color: #93c5fd;
+  color: #2563eb;
+}
+.lgv-filter--active {
+  background: #2563eb;
+  border-color: #2563eb;
+  color: #fff;
+}
+.lgv-sort {
+  border: 1px solid #dbeafe;
+  border-radius: 99px;
+  padding: 6px 14px;
+  font-family: "DM Sans", sans-serif;
+  font-size: 0.82rem;
+  color: #6b7280;
+  outline: none;
+  background: #fff;
+  cursor: pointer;
+}
+.lgv-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
+.lgv-card {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid #dbeafe;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.04);
+  transition: transform 0.2s;
+}
+.lgv-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 28px rgba(37, 99, 235, 0.1);
+}
+.lgv-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+.lgv-badge {
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 99px;
+}
+.lgv-card-model {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #1e3a5f;
+  margin-bottom: 4px;
+}
+.lgv-card-plate {
+  font-size: 0.8rem;
+  color: #6b7280;
+  font-family: monospace;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.lgv-card-specs {
+  display: flex;
+  gap: 14px;
+}
+.lgv-spec {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+.lgv-spec i {
+  color: #2563eb;
+  font-size: 14px;
+}
+.lgv-empty {
+  text-align: center;
+  padding: 80px 0;
+  color: #6b7280;
+}
+.lgv-empty i {
+  font-size: 2.5rem;
+  color: #d1d5db;
+  display: block;
+  margin-bottom: 12px;
+}
+.lgv-skel {
+  height: 160px;
+  background: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 50%, #e2e8f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+  border-radius: 16px;
+}

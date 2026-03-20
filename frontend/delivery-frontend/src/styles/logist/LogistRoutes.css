@@ -1,0 +1,217 @@
+/* ═══════════════════════════════════════════════════════════════════
+   LogistRoutes.css
+   ═══════════════════════════════════════════════════════════════════ */
+.lgr-root {
+  font-family: "DM Sans", sans-serif;
+  background: #f0f4ff;
+  min-height: 100vh;
+  padding: 32px 36px;
+  color: #1e3a5f;
+}
+.lgr-hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+.lgr-title {
+  font-family: "Playfair Display", serif;
+  font-size: 2.1rem;
+  font-weight: 800;
+  margin: 0 0 4px;
+}
+.lgr-sub {
+  font-size: 0.88rem;
+  color: #6b7280;
+  margin: 0;
+}
+.lgr-new-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: linear-gradient(135deg, #1d4ed8, #2563eb);
+  color: #fff;
+  border: none;
+  border-radius: 11px;
+  padding: 10px 20px;
+  font-family: "DM Sans", sans-serif;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+  transition: all 0.2s;
+}
+.lgr-new-btn:hover {
+  transform: translateY(-2px);
+}
+.lgr-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.lgr-card {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid #dbeafe;
+  border-radius: 16px;
+  padding: 20px 22px;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
+}
+.lgr-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+.lgr-card-id {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #2563eb;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.lgr-badge {
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 99px;
+}
+.lgr-card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+.lgr-info-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.84rem;
+  color: #6b7280;
+}
+.lgr-info-row i {
+  color: #2563eb;
+  font-size: 15px;
+}
+.lgr-points {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 14px;
+  padding: 12px;
+  background: #f0f4ff;
+  border-radius: 10px;
+}
+.lgr-point {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.8rem;
+}
+.lgr-point-num {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #2563eb;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.lgr-point-addr {
+  flex: 1;
+  color: #1e3a5f;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.lgr-point-status {
+  font-size: 0.7rem;
+  color: #6b7280;
+  flex-shrink: 0;
+}
+.lgr-points-more {
+  font-size: 0.76rem;
+  color: #2563eb;
+  padding-left: 32px;
+}
+.lgr-card-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.lgr-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: 9px;
+  padding: 7px 14px;
+  font-family: "DM Sans", sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s;
+  border: 1px solid transparent;
+}
+.lgr-btn--optimize {
+  background: rgba(79, 70, 229, 0.08);
+  color: #4f46e5;
+  border-color: rgba(79, 70, 229, 0.2);
+}
+.lgr-btn--optimize:hover {
+  background: rgba(79, 70, 229, 0.15);
+}
+.lgr-btn--start {
+  background: rgba(22, 163, 74, 0.08);
+  color: #16a34a;
+  border-color: rgba(22, 163, 74, 0.2);
+}
+.lgr-btn--start:hover {
+  background: rgba(22, 163, 74, 0.15);
+}
+.lgr-btn--done {
+  background: rgba(37, 99, 235, 0.08);
+  color: #2563eb;
+  border-color: rgba(37, 99, 235, 0.2);
+}
+.lgr-btn--done:hover {
+  background: rgba(37, 99, 235, 0.15);
+}
+.lgr-btn--cancel {
+  background: rgba(220, 38, 38, 0.07);
+  color: #dc2626;
+  border-color: rgba(220, 38, 38, 0.2);
+}
+.lgr-btn--cancel:hover {
+  background: rgba(220, 38, 38, 0.12);
+}
+.lgr-empty {
+  text-align: center;
+  padding: 80px 0;
+  color: #6b7280;
+}
+.lgr-empty i {
+  font-size: 2.5rem;
+  color: #d1d5db;
+  display: block;
+  margin-bottom: 12px;
+}
+.lgr-skels {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.lgr-skel {
+  height: 140px;
+  background: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 50%, #e2e8f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+  border-radius: 16px;
+}

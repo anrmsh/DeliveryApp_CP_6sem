@@ -1,0 +1,212 @@
+/* ═══════════════════════════════════════════════════════════════════
+   LogistOrders.css
+   ═══════════════════════════════════════════════════════════════════ */
+.lgo-root {
+  font-family: "DM Sans", sans-serif;
+  background: #f0f4ff;
+  min-height: 100vh;
+  padding: 32px 36px;
+  color: #1e3a5f;
+}
+.lgo-hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+.lgo-title {
+  font-family: "Playfair Display", serif;
+  font-size: 2.1rem;
+  font-weight: 800;
+  margin: 0 0 4px;
+}
+.lgo-sub {
+  font-size: 0.88rem;
+  color: #6b7280;
+  margin: 0;
+}
+.lgo-route-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: linear-gradient(135deg, #1d4ed8, #2563eb);
+  color: #fff;
+  border: none;
+  border-radius: 11px;
+  padding: 10px 20px;
+  font-family: "DM Sans", sans-serif;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+  transition: all 0.2s;
+}
+.lgo-route-btn:hover {
+  transform: translateY(-2px);
+}
+.lgo-toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.lgo-search {
+  border: 1px solid #dbeafe;
+  border-radius: 11px;
+  padding: 10px 16px;
+  font-family: "DM Sans", sans-serif;
+  font-size: 0.9rem;
+  outline: none;
+  max-width: 420px;
+  transition: border-color 0.2s;
+  background: #fff;
+}
+.lgo-search:focus {
+  border-color: #93c5fd;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+.lgo-filters {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.lgo-filter {
+  border: 1px solid #dbeafe;
+  border-radius: 99px;
+  padding: 5px 14px;
+  background: #fff;
+  font-family: "DM Sans", sans-serif;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  color: #6b7280;
+  transition: all 0.18s;
+}
+.lgo-filter:hover {
+  border-color: #93c5fd;
+  color: #2563eb;
+}
+.lgo-filter--active {
+  background: #2563eb;
+  border-color: #2563eb;
+  color: #fff;
+}
+.lgo-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.lgo-card {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid #dbeafe;
+  border-radius: 14px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: box-shadow 0.2s;
+}
+.lgo-card:hover {
+  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.1);
+  border-color: #93c5fd;
+}
+.lgo-card-id {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #2563eb;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.lgo-card-route {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.lgo-addr {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.84rem;
+  color: #1e3a5f;
+}
+.lgo-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.lgo-dot--from {
+  background: #2563eb;
+}
+.lgo-dot--to {
+  background: #16a34a;
+}
+.lgo-addr-line {
+  height: 14px;
+  width: 1px;
+  background: rgba(37, 99, 235, 0.2);
+  margin-left: 3px;
+}
+.lgo-client {
+  font-size: 0.76rem;
+  color: #6b7280;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 6px;
+}
+.lgo-card-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.lgo-badge {
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 99px;
+}
+.lgo-date,
+.lgo-requested {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.76rem;
+  color: #6b7280;
+}
+.lgo-empty {
+  text-align: center;
+  padding: 80px 0;
+  color: #6b7280;
+}
+.lgo-empty i {
+  font-size: 2.5rem;
+  color: #d1d5db;
+  display: block;
+  margin-bottom: 12px;
+}
+.lgo-empty p {
+  font-size: 0.9rem;
+}
+.lgo-skels {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.lgo-skel {
+  height: 88px;
+  background: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 50%, #e2e8f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+  border-radius: 14px;
+}

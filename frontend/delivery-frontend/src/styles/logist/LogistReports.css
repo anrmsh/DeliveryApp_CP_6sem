@@ -1,0 +1,213 @@
+/* ═══════════════════════════════════════════════════════════════════
+   LogistReports.css
+   ═══════════════════════════════════════════════════════════════════ */
+.lgrep-root {
+  font-family: "DM Sans", sans-serif;
+  background: #f0f4ff;
+  min-height: 100vh;
+  padding: 32px 36px;
+  color: #1e3a5f;
+}
+.lgrep-hero {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+.lgrep-title {
+  font-family: "Playfair Display", serif;
+  font-size: 2.1rem;
+  font-weight: 800;
+  margin: 0 0 4px;
+}
+.lgrep-sub {
+  font-size: 0.88rem;
+  color: #6b7280;
+  margin: 0;
+}
+.lgrep-periods {
+  display: flex;
+  gap: 6px;
+}
+.lgrep-period-btn {
+  border: 1px solid #dbeafe;
+  border-radius: 99px;
+  padding: 7px 18px;
+  background: #fff;
+  font-family: "DM Sans", sans-serif;
+  font-size: 0.84rem;
+  font-weight: 500;
+  color: #6b7280;
+  cursor: pointer;
+  transition: all 0.18s;
+}
+.lgrep-period-btn:hover {
+  border-color: #93c5fd;
+  color: #2563eb;
+}
+.lgrep-period-btn--active {
+  background: #2563eb;
+  border-color: #2563eb;
+  color: #fff;
+}
+.lgrep-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+}
+.lgrep-card {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid #dbeafe;
+  border-radius: 18px;
+  padding: 22px 18px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+  transition: transform 0.2s;
+}
+.lgrep-card:hover {
+  transform: translateY(-4px);
+}
+.lgrep-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  border-radius: 18px 18px 0 0;
+}
+.lrep-blue::before {
+  background: linear-gradient(90deg, #2563eb, #60a5fa);
+}
+.lrep-green::before {
+  background: linear-gradient(90deg, #16a34a, #22c55e);
+}
+.lrep-red::before {
+  background: linear-gradient(90deg, #dc2626, #f87171);
+}
+.lrep-indigo::before {
+  background: linear-gradient(90deg, #4f46e5, #818cf8);
+}
+.lrep-amber::before {
+  background: linear-gradient(90deg, #d97706, #fbbf24);
+}
+.lgrep-card-icon {
+  font-size: 1.5rem;
+  display: block;
+  margin-bottom: 10px;
+}
+.lrep-blue .lgrep-card-icon {
+  color: #2563eb;
+}
+.lrep-green .lgrep-card-icon {
+  color: #16a34a;
+}
+.lrep-red .lgrep-card-icon {
+  color: #dc2626;
+}
+.lrep-indigo .lgrep-card-icon {
+  color: #4f46e5;
+}
+.lrep-amber .lgrep-card-icon {
+  color: #d97706;
+}
+.lgrep-card-num {
+  font-family: "Playfair Display", serif;
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.lrep-blue .lgrep-card-num {
+  color: #2563eb;
+}
+.lrep-green .lgrep-card-num {
+  color: #16a34a;
+}
+.lrep-red .lgrep-card-num {
+  color: #dc2626;
+}
+.lrep-indigo .lgrep-card-num {
+  color: #4f46e5;
+}
+.lrep-amber .lgrep-card-num {
+  color: #d97706;
+}
+.lgrep-card-label {
+  font-size: 0.76rem;
+  color: #6b7280;
+}
+.lgrep-rate-card {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid #dbeafe;
+  border-radius: 18px;
+  padding: 22px;
+  max-width: 520px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+}
+.lgrep-rate-title {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #9ca3af;
+  margin-bottom: 16px;
+}
+.lgrep-rate-title i {
+  color: #2563eb;
+  font-size: 14px;
+}
+.lgrep-rate-num {
+  font-family: "Playfair Display", serif;
+  font-size: 3rem;
+  font-weight: 800;
+  color: #2563eb;
+  margin-bottom: 10px;
+}
+.lgrep-rate-bar-bg {
+  height: 8px;
+  background: #e2e8f0;
+  border-radius: 99px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+.lgrep-rate-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #2563eb, #60a5fa);
+  border-radius: 99px;
+  transition: width 0.8s ease;
+}
+.lgrep-rate-sub {
+  font-size: 0.84rem;
+  color: #6b7280;
+}
+.lgrep-empty {
+  text-align: center;
+  padding: 80px 0;
+  color: #6b7280;
+}
+.lgrep-empty i {
+  font-size: 2.5rem;
+  color: #d1d5db;
+  display: block;
+  margin-bottom: 12px;
+}
+.lgrep-skels {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.lgrep-skel {
+  height: 110px;
+  background: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 50%, #e2e8f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+  border-radius: 18px;
+}

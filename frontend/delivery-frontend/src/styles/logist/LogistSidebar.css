@@ -1,0 +1,206 @@
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=DM+Sans:wght@300;400;500;600&display=swap");
+
+/* ── SIDEBAR ── */
+.lgsidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  background: white;
+  border-right: 1px solid #e5e7eb;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: width 0.3s;
+  z-index: 99;
+  overflow: hidden;
+}
+
+.lgsidebar.open {
+  width: 260px;
+  padding: 24px 16px;
+}
+.lgsidebar.collapsed {
+  width: 70px;
+  padding: 20px 10px;
+}
+
+/* ── LOGO ── */
+.lgsidebar-logo {
+  font-family: "Playfair Display", serif;
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #1e40af;
+  white-space: nowrap;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.lgsidebar-logo i {
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+/* ── ROLE BADGE ── */
+.lgsidebar-role {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(30, 64, 175, 0.08);
+  color: #1e40af;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 99px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 20px;
+  width: fit-content;
+}
+
+.lgsidebar-role i {
+  font-size: 12px;
+}
+
+/* ── NAV ── */
+.lgsidebar-nav {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  overflow: hidden;
+}
+
+.lgsidebar-link {
+  display: flex;
+  align-items: center;
+  padding: 10px 12px;
+  color: #4b5563;
+  text-decoration: none;
+  border-radius: 10px;
+  transition:
+    background 0.18s,
+    color 0.18s;
+  font-family: "DM Sans", sans-serif;
+  font-size: 0.88rem;
+  font-weight: 500;
+  white-space: nowrap;
+  gap: 0;
+}
+
+.lgsidebar-link i {
+  font-size: 20px;
+  min-width: 28px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.lgsidebar-link span {
+  margin-left: 12px;
+}
+
+.lgsidebar-link:hover {
+  background: #eff6ff;
+  color: #1e40af;
+}
+
+.lgsidebar-link--active {
+  background: #dbeafe;
+  color: #1d4ed8;
+  font-weight: 600;
+}
+
+/* ── BOTTOM ── */
+.lgsidebar-bottom {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: 14px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.lgsidebar-btn {
+  display: flex;
+  align-items: center;
+  padding: 10px 12px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  cursor: pointer;
+  transition:
+    background 0.18s,
+    color 0.18s;
+  color: #4b5563;
+  font-family: "DM Sans", sans-serif;
+  font-size: 0.86rem;
+  font-weight: 500;
+  white-space: nowrap;
+  width: 100%;
+  text-align: left;
+}
+
+.lgsidebar-btn i {
+  font-size: 20px;
+  min-width: 28px;
+  text-align: center;
+  flex-shrink: 0;
+}
+.lgsidebar-btn span {
+  margin-left: 12px;
+}
+.lgsidebar-btn:hover {
+  background: #eff6ff;
+  color: #1e40af;
+}
+
+.lgsidebar-btn--logout:hover {
+  background: #fef2f2;
+  color: #dc2626;
+  border-color: #fecaca;
+}
+
+/* ── TOGGLE ── */
+.lgsidebar-toggle {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 100;
+  width: 20px;
+  height: 44px;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-left: none;
+  border-radius: 0 8px 8px 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.06);
+  transition: left 0.3s;
+  padding: 0;
+  color: #6b7280;
+}
+
+.lgsidebar-toggle:hover {
+  background: #eff6ff;
+  color: #1e40af;
+}
+.lgsidebar-toggle i {
+  font-size: 14px;
+}
+
+/* ── LAYOUT ── */
+.lg-layout {
+  display: flex;
+  min-height: 100vh;
+  background: #f0f4ff;
+}
+
+.lg-content {
+  flex: 1;
+  min-height: 100vh;
+  overflow-x: hidden;
+}

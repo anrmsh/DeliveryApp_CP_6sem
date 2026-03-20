@@ -1,0 +1,128 @@
+/* ═══════════════════════════════════════════════════════════════════
+   LogistCouriers.css
+   ═══════════════════════════════════════════════════════════════════ */
+.lgc-root {
+  font-family: "DM Sans", sans-serif;
+  background: #f0f4ff;
+  min-height: 100vh;
+  padding: 32px 36px;
+  color: #1e3a5f;
+}
+.lgc-hero {
+  margin-bottom: 28px;
+}
+.lgc-title {
+  font-family: "Playfair Display", serif;
+  font-size: 2.1rem;
+  font-weight: 800;
+  margin: 0 0 4px;
+}
+.lgc-sub {
+  font-size: 0.88rem;
+  color: #6b7280;
+  margin: 0;
+}
+.lgc-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 680px;
+}
+.lgc-card {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid #dbeafe;
+  border-radius: 14px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: transform 0.18s;
+}
+.lgc-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(37, 99, 235, 0.1);
+}
+.lgc-card--top {
+  border: 2px solid #fbbf24;
+  background: linear-gradient(
+    135deg,
+    rgba(251, 191, 36, 0.06),
+    rgba(255, 255, 255, 0.98)
+  );
+}
+.lgc-rank {
+  min-width: 36px;
+  text-align: center;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #6b7280;
+}
+.lgc-crown {
+  font-size: 1.5rem;
+  color: #f59e0b;
+}
+.lgc-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+.lgc-info {
+  flex: 1;
+}
+.lgc-name {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #1e3a5f;
+  margin-bottom: 2px;
+}
+.lgc-total {
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+.lgc-stars {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+.lgc-star {
+  font-size: 1rem;
+  color: #fbbf24;
+}
+.lgc-rating-num {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #1e3a5f;
+  margin-left: 6px;
+}
+.lgc-empty {
+  text-align: center;
+  padding: 80px 0;
+  color: #6b7280;
+}
+.lgc-empty i {
+  font-size: 2.5rem;
+  color: #d1d5db;
+  display: block;
+  margin-bottom: 12px;
+}
+.lgc-skels {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.lgc-skel {
+  height: 74px;
+  background: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 50%, #e2e8f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+  border-radius: 14px;
+}

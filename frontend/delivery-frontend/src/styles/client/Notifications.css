@@ -7,8 +7,9 @@
   --deep:       #134e4a;
   --muted:      #6b7280;
   --border:     #d1fae5;
-  --card-bg:    rgba(255,255,255,0.92);
+  --card-bg:    rgba(255,255,255,0.95);
   --page-bg:    #f0fdf4;
+
   font-family: 'DM Sans', sans-serif;
   background: var(--page-bg);
   min-height: 100vh;
@@ -16,11 +17,12 @@
   color: var(--deep);
 }
 
+/* ── HERO ── */
 .notif-hero {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  margin-bottom: 28px;
+  margin-bottom: 24px;
   gap: 16px;
   flex-wrap: wrap;
 }
@@ -33,44 +35,121 @@
   display: flex;
   align-items: center;
   gap: 12px;
+  color: var(--deep);
+}
+
+.notif-title > i {
+  font-size: 1.8rem;
+  color: var(--teal);
 }
 
 .notif-count {
   background: linear-gradient(135deg, var(--teal), #0f766e);
   color: #fff;
   font-family: 'DM Sans', sans-serif;
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   font-weight: 700;
-  padding: 2px 10px;
+  padding: 3px 11px;
   border-radius: 99px;
+  box-shadow: 0 2px 8px rgba(13,148,136,0.3);
 }
 
 .notif-sub { font-size: 0.88rem; color: var(--muted); margin: 0; }
 
+.notif-hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .notif-mark-all {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
   background: none;
-  border: 1px solid rgba(13,148,136,0.25);
+  border: 1px solid rgba(13,148,136,0.28);
   color: var(--teal);
   border-radius: 10px;
   padding: 9px 18px;
   font-family: 'DM Sans', sans-serif;
-  font-size: 0.82rem;
+  font-size: 0.84rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s;
   white-space: nowrap;
 }
 
-.notif-mark-all:hover { background: rgba(13,148,136,0.06); }
+.notif-mark-all:hover {
+  background: rgba(13,148,136,0.07);
+  border-color: var(--teal);
+}
 
-/* LIST */
+.notif-refresh {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  border-radius: 10px;
+  padding: 9px 12px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.84rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.notif-refresh:hover {
+  border-color: var(--teal-light);
+  color: var(--teal);
+  background: rgba(13,148,136,0.05);
+}
+
+.notif-refresh i { font-size: 16px; }
+
+/* ── MOCK BANNER ── */
+.notif-mock-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(217,119,6,0.07);
+  border: 1px solid rgba(217,119,6,0.2);
+  border-radius: 10px;
+  padding: 10px 16px;
+  font-size: 0.82rem;
+  color: #92400e;
+  margin-bottom: 20px;
+  max-width: 560px;
+}
+
+.notif-mock-banner i { font-size: 16px; }
+
+/* ── SECTIONS ── */
+.notif-section { margin-bottom: 24px; }
+
+.notif-section-label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--teal);
+  margin-bottom: 10px;
+}
+
+.notif-section-label--muted { color: #9ca3af; }
+
+/* ── LIST ── */
 .notif-list {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  max-width: 720px;
+  max-width: 760px;
 }
 
+/* ── CARD ── */
 .notif-card {
   background: var(--card-bg);
   border: 1px solid var(--border);
@@ -80,22 +159,42 @@
   align-items: flex-start;
   gap: 14px;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: transform 0.18s, box-shadow 0.18s, border-color 0.18s;
   box-shadow: 0 2px 8px rgba(0,0,0,0.04);
 }
 
 .notif-card:hover {
   border-color: rgba(20,184,166,0.3);
-  box-shadow: 0 6px 20px rgba(13,148,136,0.08);
+  box-shadow: 0 6px 20px rgba(13,148,136,0.09);
+  transform: translateY(-1px);
 }
 
 .notif-card--unread {
   border-left: 3px solid var(--teal);
-  background: rgba(255,255,255,0.97);
+  background: #fff;
 }
 
-.notif-card-icon { font-size: 1.5rem; flex-shrink: 0; margin-top: 2px; }
+/* ── ICON WRAP ── */
+.notif-card-icon-wrap {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: rgba(13,148,136,0.07);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
 
+.notif-icon { font-size: 1.35rem; }
+.notif-icon--warn    { color: #d97706; }
+.notif-icon--success { color: #16a34a; }
+.notif-icon--info    { color: var(--teal); }
+.notif-icon--danger  { color: #dc2626; }
+.notif-icon--blue    { color: #2563eb; }
+.notif-icon--muted   { color: var(--muted); }
+
+/* ── BODY ── */
 .notif-card-body { flex: 1; min-width: 0; }
 
 .notif-card-title {
@@ -106,29 +205,79 @@
 }
 
 .notif-card-msg {
-  font-size: 0.84rem;
+  font-size: 0.83rem;
   color: var(--muted);
   line-height: 1.6;
-  margin-bottom: 6px;
+  margin-bottom: 7px;
 }
 
-.notif-card-time { font-size: 0.72rem; color: #94a3b8; }
+.notif-card-time {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.72rem;
+  color: #94a3b8;
+}
 
-.notif-dot {
-  width: 10px; height: 10px;
+.notif-card-time i { font-size: 12px; }
+
+/* ── UNREAD DOT ── */
+.notif-unread-dot {
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
   background: var(--teal);
   flex-shrink: 0;
-  margin-top: 6px;
-  box-shadow: 0 0 6px rgba(13,148,136,0.5);
+  margin-top: 5px;
+  box-shadow: 0 0 7px rgba(13,148,136,0.5);
+  animation: dot-pulse 2s infinite;
 }
 
-/* EMPTY */
+@keyframes dot-pulse {
+  0%,100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: 0.5; transform: scale(0.7); }
+}
+
+/* ── EMPTY ── */
 .notif-empty {
   text-align: center;
   padding: 80px 0;
   color: var(--muted);
 }
 
-.notif-empty span { font-size: 2.5rem; }
-.notif-empty p { font-size: 0.9rem; margin-top: 12px; }
+.notif-empty i {
+  font-size: 3rem;
+  color: #d1d5db;
+  display: block;
+  margin-bottom: 14px;
+}
+
+.notif-empty p {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--deep);
+  margin: 0 0 6px;
+}
+
+.notif-empty span { font-size: 0.84rem; }
+
+/* ── SKELETON ── */
+.notif-skels {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 760px;
+}
+
+.notif-skel {
+  height: 82px;
+  background: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 50%, #e2e8f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+  border-radius: 16px;
+}
+
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
