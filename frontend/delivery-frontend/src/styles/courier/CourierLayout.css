@@ -1,0 +1,10 @@
+.cl-layout {
+  display: flex;
+  min-height: 100vh;
+  background: #f0fdf4;
+}
+.cl-content {
+  flex: 1;
+  min-height: 100vh;
+  overflow-x: hidden;
+}

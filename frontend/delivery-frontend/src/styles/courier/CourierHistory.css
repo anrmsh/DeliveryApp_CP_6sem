@@ -1,0 +1,154 @@
+.ch-root {
+  font-family: "DM Sans", sans-serif;
+  background: #f0fdf4;
+  min-height: 100vh;
+  padding: 32px 36px;
+  color: #14532d;
+}
+.ch-hero {
+  margin-bottom: 20px;
+}
+.ch-title {
+  font-family: "Playfair Display", serif;
+  font-size: 2.1rem;
+  font-weight: 800;
+  margin: 0 0 4px;
+}
+.ch-sub {
+  font-size: 0.88rem;
+  color: #6b7280;
+  margin: 0;
+}
+.ch-summary {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 20px;
+}
+.ch-sum-card {
+  background: rgba(255, 255, 255, 0.97);
+  border: 1px solid #a7f3a0;
+  border-radius: 16px;
+  padding: 20px;
+  text-align: center;
+}
+.ch-sum-card i {
+  font-size: 1.4rem;
+  color: #16a34a;
+  display: block;
+  margin-bottom: 8px;
+}
+.ch-sum-num {
+  font-family: "Playfair Display", serif;
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #15803d;
+  margin-bottom: 3px;
+}
+.ch-sum-label {
+  font-size: 0.74rem;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.ch-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.ch-card {
+  background: rgba(255, 255, 255, 0.97);
+  border: 1px solid #a7f3a0;
+  border-radius: 16px;
+  padding: 18px 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+.ch-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+.ch-card-id {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #15803d;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.ch-done-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(22, 163, 74, 0.1);
+  color: #16a34a;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 99px;
+}
+.ch-card-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+.ch-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.82rem;
+  color: #4b5563;
+}
+.ch-meta-row i {
+  color: #16a34a;
+  font-size: 14px;
+}
+.ch-pts-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.78rem;
+  color: #6b7280;
+  margin-bottom: 5px;
+}
+.ch-bar {
+  height: 5px;
+  background: #d1fae5;
+  border-radius: 99px;
+  overflow: hidden;
+}
+.ch-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #15803d, #22c55e);
+  border-radius: 99px;
+  transition: width 0.8s ease;
+}
+.ch-empty {
+  text-align: center;
+  padding: 80px 0;
+  color: #6b7280;
+}
+.ch-empty i {
+  font-size: 2.5rem;
+  color: #a7f3a0;
+  display: block;
+  margin-bottom: 12px;
+}
+.ch-empty p {
+  font-size: 0.9rem;
+}
+.ch-skels {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.ch-skel {
+  height: 100px;
+  background: linear-gradient(90deg, #d1fae5 25%, #f0fdf4 50%, #d1fae5 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+  border-radius: 16px;
+}

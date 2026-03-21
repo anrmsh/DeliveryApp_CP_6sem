@@ -1,155 +1,181 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=DM+Sans:wght@300;400;500;600&display=swap');
 
 /* ── SIDEBAR ── */
 .csidebar {
   position: fixed;
   top: 0; left: 0;
   height: 100vh;
-  background: white;
-  border-right: 1px solid #e5e7eb;
+  background: #fff;
+  border-right: 1px solid #d1fae5;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  transition: width 0.3s;
   z-index: 99;
   overflow: hidden;
+  transition: width 0.28s cubic-bezier(.4,0,.2,1);
+  box-shadow: 2px 0 16px rgba(13,148,136,0.06);
 }
+.csidebar.open      { width: 260px; padding: 24px 14px; }
+.csidebar.collapsed { width: 62px;  padding: 20px 10px; }
 
-.csidebar.open      { width: 260px; padding: 30px 20px; }
-.csidebar.collapsed { width: 70px;  padding: 20px 10px; }
-
-/* ── LOGO ── */
+/* Logo */
 .csidebar-logo {
-  font-size: 20px;
-  font-weight: 700;
-  color: #15803d;
-  white-space: nowrap;
-  overflow: hidden;
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 30px;
+  margin-bottom: 6px;
+  padding: 0 4px;
+}
+.csidebar-logo-icon {
+  font-size: 22px;
+  color: #0d9488;
+  flex-shrink: 0;
+}
+.csidebar-logo-text {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #134e4a;
+  white-space: nowrap;
 }
 
-.csidebar-logo i { font-size: 24px; flex-shrink: 0; }
+.csidebar-role {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(13,148,136,0.1);
+  color: #0d9488;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 99px;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-bottom: 20px;
+  width: fit-content;
+  margin-left: 4px;
+}
 
-/* ── NAV ── */
+/* Nav */
 .csidebar-nav {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
+  overflow: hidden;
 }
 
 .csidebar-link {
   display: flex;
   align-items: center;
-  padding: 11px 12px;
-  color: #4b5563;
+  gap: 0;
+  padding: 10px 11px;
+  border-radius: 11px;
+  color: #374151;
   text-decoration: none;
-  border-radius: 8px;
-  transition: background 0.2s, color 0.2s;
   font-family: 'DM Sans', sans-serif;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   font-weight: 500;
   white-space: nowrap;
-  gap: 0;
+  transition: background 0.16s, color 0.16s;
+  position: relative;
 }
-
-.csidebar-link i {
-  font-size: 20px;
+.csidebar-link i { font-size: 20px; flex-shrink: 0; }
+.csidebar-link-icon-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   min-width: 28px;
-  text-align: center;
-  flex-shrink: 0;
 }
+.csidebar-link-label { margin-left: 10px; flex: 1; }
 
-.csidebar-link span { margin-left: 12px; }
-
-.csidebar-link:hover {
-  background: #ecfdf5;
-  color: #065f46;
-}
-
+.csidebar-link:hover { background: #f0fdf4; color: #0d9488; }
 .csidebar-link--active {
-  background: #dcfce7;
-  color: #15803d;
+  background: linear-gradient(135deg, rgba(13,148,136,0.12), rgba(16,185,129,0.08));
+  color: #0d9488;
   font-weight: 600;
 }
+.csidebar-link--active::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 20%; bottom: 20%;
+  width: 3px;
+  border-radius: 0 3px 3px 0;
+  background: #0d9488;
+}
 
-.csidebar-link--active i { color: #15803d; }
+/* Badge dot (collapsed) */
+.csidebar-badge-dot {
+  position: absolute;
+  top: -2px; right: -2px;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: #ef4444;
+  border: 2px solid #fff;
+}
 
-/* ── BOTTOM ── */
+/* Badge pill (open) */
+.csidebar-badge {
+  background: #ef4444;
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 99px;
+  margin-left: 4px;
+}
+
+/* Bottom */
 .csidebar-bottom {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding-top: 16px;
-  border-top: 1px solid #e5e7eb;
+  padding-top: 12px;
+  border-top: 1px solid #d1fae5;
 }
 
 .csidebar-btn {
   display: flex;
   align-items: center;
-  padding: 10px 12px;
-  background: #f9fff6;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
+  gap: 10px;
+  padding: 10px 11px;
+  border-radius: 11px;
+  background: none;
+  border: none;
   cursor: pointer;
-  transition: background 0.2s, color 0.2s;
-  color: #4b5563;
   font-family: 'DM Sans', sans-serif;
   font-size: 0.88rem;
   font-weight: 500;
-  white-space: nowrap;
+  color: #6b7280;
   width: 100%;
   text-align: left;
+  white-space: nowrap;
+  transition: all 0.16s;
 }
+.csidebar-btn i { font-size: 20px; flex-shrink: 0; min-width: 28px; text-align: center; }
+.csidebar-btn--logout:hover { background: #fef2f2; color: #dc2626; }
 
-.csidebar-btn i {
-  font-size: 20px;
-  min-width: 28px;
-  text-align: center;
-  flex-shrink: 0;
-}
-
-.csidebar-btn span { margin-left: 12px; }
-
-.csidebar-btn:hover {
-  background: #ecfdf5;
-  color: #065f46;
-}
-
-.csidebar-btn--logout:hover {
-  background: #fef2f2;
-  color: #dc2626;
-  border-color: #fecaca;
-}
-
-/* ── TOGGLE BUTTON ── */
+/* Toggle */
 .csidebar-toggle {
   position: fixed;
   top: 50%;
   transform: translateY(-50%);
   z-index: 100;
-  width: 20px;
-  height: 44px;
-  background: white;
-  border: 1px solid #e5e7eb;
+  width: 20px; height: 42px;
+  background: #fff;
+  border: 1px solid #d1fae5;
   border-left: none;
   border-radius: 0 8px 8px 0;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 2px 0 8px rgba(0,0,0,0.06);
-  transition: left 0.3s;
+  box-shadow: 2px 0 8px rgba(0,0,0,0.05);
+  transition: left 0.28s cubic-bezier(.4,0,.2,1);
   padding: 0;
-  color: #6b7280;
+  color: #9ca3af;
 }
+.csidebar-toggle:hover { background: #f0fdf4; color: #0d9488; }
+.csidebar-toggle i { font-size: 14px; }
 
-.csidebar-toggle:hover {
-  background: #ecfdf5;
-  color: #15803d;
-}
-
-.csidebar-toggle i { font-size: 16px; }
+/* Layout */
+.client-layout { display: flex; min-height: 100vh; background: #f0fdf4; }
+.client-content { flex: 1; min-height: 100vh; overflow-x: hidden; }

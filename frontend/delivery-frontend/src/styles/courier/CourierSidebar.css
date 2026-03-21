@@ -1,0 +1,180 @@
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=DM+Sans:wght@300;400;500;600&display=swap");
+
+/* ── SIDEBAR ── */
+.csb {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  background: #fff;
+  border-right: 1px solid #bbf7d0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: width 0.3s;
+  z-index: 99;
+  overflow: hidden;
+}
+.csb.open {
+  width: 260px;
+  padding: 24px 16px;
+}
+.csb.collapsed {
+  width: 70px;
+  padding: 20px 10px;
+}
+
+.csb-logo {
+  font-family: "Playfair Display", serif;
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #15803d;
+  white-space: nowrap;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+.csb-logo i {
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.csb-role {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(167, 243, 160, 0.3);
+  color: #15803d;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 99px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 20px;
+  width: fit-content;
+}
+
+.csb-nav {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  overflow: hidden;
+}
+
+.csb-link {
+  display: flex;
+  align-items: center;
+  padding: 10px 12px;
+  color: #374151;
+  text-decoration: none;
+  border-radius: 10px;
+  transition:
+    background 0.18s,
+    color 0.18s;
+  font-family: "DM Sans", sans-serif;
+  font-size: 0.88rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.csb-link i {
+  font-size: 20px;
+  min-width: 28px;
+  text-align: center;
+  flex-shrink: 0;
+}
+.csb-link span {
+  margin-left: 12px;
+}
+.csb-link:hover {
+  background: #f0fdf4;
+  color: #15803d;
+}
+.csb-link--active {
+  background: #dcfce7;
+  color: #15803d;
+  font-weight: 600;
+}
+
+.csb-bottom {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: 14px;
+  border-top: 1px solid #bbf7d0;
+}
+
+.csb-btn {
+  display: flex;
+  align-items: center;
+  padding: 10px 12px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  cursor: pointer;
+  color: #4b5563;
+  font-family: "DM Sans", sans-serif;
+  font-size: 0.86rem;
+  font-weight: 500;
+  white-space: nowrap;
+  width: 100%;
+  text-align: left;
+  transition: all 0.18s;
+}
+.csb-btn i {
+  font-size: 20px;
+  min-width: 28px;
+  text-align: center;
+  flex-shrink: 0;
+}
+.csb-btn span {
+  margin-left: 12px;
+}
+.csb-btn--logout:hover {
+  background: #fef2f2;
+  color: #dc2626;
+  border-color: #fecaca;
+}
+
+.csb-toggle {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 100;
+  width: 20px;
+  height: 44px;
+  background: #fff;
+  border: 1px solid #bbf7d0;
+  border-left: none;
+  border-radius: 0 8px 8px 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
+  transition: left 0.3s;
+  padding: 0;
+  color: #6b7280;
+}
+.csb-toggle:hover {
+  background: #f0fdf4;
+  color: #15803d;
+}
+.csb-toggle i {
+  font-size: 14px;
+}
+
+/* ── LAYOUT ── */
+.cl-layout {
+  display: flex;
+  min-height: 100vh;
+  background: #f0fdf4;
+}
+.cl-content {
+  flex: 1;
+  min-height: 100vh;
+  overflow-x: hidden;
+}

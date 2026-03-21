@@ -71,7 +71,7 @@ const LoginForm = () => {
         if (data.role === "ADMIN") navigate("/admin");
         else if (data.role === "CLIENT") navigate("/client");
         else if (data.role === "COURIER") navigate("/courier");
-        else if (data.role === "LOGIST") navigate("/logistic");
+        else if (data.role === "LOGIST") navigate("/logist");
         else navigate("/");
 
       } else {

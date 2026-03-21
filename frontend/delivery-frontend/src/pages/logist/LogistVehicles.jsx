@@ -1,6 +1,7 @@
 // ═══════════════════════════════════════════════════════════════════
 // LogistVehicles.jsx  —  src/pages/logist/LogistVehicles.jsx
 // ═══════════════════════════════════════════════════════════════════
+import VehicleIcon from "../../components/logist/VehicleIcon";
 import { useEffect, useState } from "react";
 import LogistLayout from "../../components/layout/LogistLayout";
 import axiosClient from "../../api/axiosClient";

@@ -1,5 +1,5 @@
 import { createContext, useState } from "react";
-import LogistSidebar from "../LogistSidebar";
+import LogistSidebar from "../logist/LogistSidebar";
 import "../../styles/logist/LogistLayout.css";
 
 export const LogistSidebarContext = createContext({ open: true, setOpen: () => {} });

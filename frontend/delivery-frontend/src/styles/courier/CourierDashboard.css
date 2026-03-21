@@ -1,0 +1,267 @@
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=DM+Sans:wght@300;400;500;600&display=swap");
+
+.cdb-root {
+  font-family: "DM Sans", sans-serif;
+  background: #f0fdf4;
+  min-height: 100vh;
+  padding: 32px 36px;
+  color: #14532d;
+}
+.cdb-hero {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+.cdb-title {
+  font-family: "Playfair Display", serif;
+  font-size: 2.1rem;
+  font-weight: 800;
+  margin: 0 0 4px;
+}
+.cdb-sub {
+  font-size: 0.88rem;
+  color: #4ade80;
+  margin: 0;
+  text-transform: capitalize;
+}
+
+.cdb-active-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  background: linear-gradient(135deg, #15803d, #16a34a);
+  color: #fff;
+  border: none;
+  border-radius: 13px;
+  padding: 12px 22px;
+  font-family: "DM Sans", sans-serif;
+  font-size: 0.92rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(21, 128, 61, 0.35);
+  transition: all 0.2s;
+}
+.cdb-active-btn:hover {
+  transform: translateY(-2px);
+}
+.cdb-pulse {
+  animation: pulse 1.4s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+
+.cdb-notif-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(167, 243, 160, 0.3);
+  border: 1px solid #a7f3a0;
+  border-radius: 12px;
+  padding: 12px 18px;
+  font-size: 0.88rem;
+  color: #15803d;
+  margin-bottom: 16px;
+  cursor: pointer;
+}
+.cdb-notif-banner i:first-child {
+  font-size: 18px;
+  color: #16a34a;
+}
+.cdb-notif-banner i:last-child {
+  margin-left: auto;
+}
+.cdb-notif-banner strong {
+  color: #15803d;
+  font-weight: 700;
+}
+
+.cdb-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.cdb-card {
+  background: rgba(255, 255, 255, 0.97);
+  border: 1px solid #a7f3a0;
+  border-radius: 18px;
+  padding: 22px 18px;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.04);
+  transition: transform 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+.cdb-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 28px rgba(21, 128, 61, 0.12);
+}
+.cdb-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  border-radius: 18px 18px 0 0;
+}
+.cdb-green::before {
+  background: linear-gradient(90deg, #16a34a, #22c55e);
+}
+.cdb-emerald::before {
+  background: linear-gradient(90deg, #059669, #34d399);
+}
+.cdb-teal::before {
+  background: linear-gradient(90deg, #0d9488, #14b8a6);
+}
+.cdb-lime::before {
+  background: linear-gradient(90deg, #65a30d, #a3e635);
+}
+
+.cdb-card-icon {
+  font-size: 1.5rem;
+  display: block;
+  margin-bottom: 10px;
+}
+.cdb-green .cdb-card-icon {
+  color: #16a34a;
+}
+.cdb-emerald .cdb-card-icon {
+  color: #059669;
+}
+.cdb-teal .cdb-card-icon {
+  color: #0d9488;
+}
+.cdb-lime .cdb-card-icon {
+  color: #65a30d;
+}
+
+.cdb-card-num {
+  font-family: "Playfair Display", serif;
+  font-size: 2.2rem;
+  font-weight: 800;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.cdb-green .cdb-card-num {
+  color: #16a34a;
+}
+.cdb-emerald .cdb-card-num {
+  color: #059669;
+}
+.cdb-teal .cdb-card-num {
+  color: #0d9488;
+}
+.cdb-lime .cdb-card-num {
+  color: #65a30d;
+}
+.cdb-card-label {
+  font-size: 0.76rem;
+  color: #6b7280;
+}
+
+.cdb-rating-card {
+  background: rgba(255, 255, 255, 0.97);
+  border: 1px solid #a7f3a0;
+  border-radius: 16px;
+  padding: 18px 22px;
+  margin-bottom: 20px;
+}
+.cdb-section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #6b7280;
+  margin-bottom: 12px;
+}
+.cdb-section-title i {
+  color: #16a34a;
+  font-size: 14px;
+}
+.cdb-stars-row {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.cdb-star {
+  font-size: 1.3rem;
+  color: #fbbf24;
+}
+.cdb-star-num {
+  font-family: "Playfair Display", serif;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #16a34a;
+  margin-left: 8px;
+}
+.cdb-star-total {
+  font-size: 0.78rem;
+  color: #6b7280;
+  margin-left: 4px;
+}
+
+.cdb-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.cdb-action-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.97);
+  border: 1px solid #a7f3a0;
+  border-radius: 14px;
+  padding: 18px 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: "DM Sans", sans-serif;
+  min-width: 100px;
+}
+.cdb-action-btn i {
+  font-size: 1.5rem;
+  color: #16a34a;
+}
+.cdb-action-btn span {
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.cdb-action-btn:hover {
+  border-color: #16a34a;
+  background: #f0fdf4;
+  transform: translateY(-2px);
+}
+
+.cdb-skel {
+  height: 110px;
+  background: linear-gradient(90deg, #d1fae5 25%, #f0fdf4 50%, #d1fae5 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+  border-radius: 18px;
+}
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}

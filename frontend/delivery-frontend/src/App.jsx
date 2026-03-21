@@ -18,19 +18,28 @@ import ClientLayout from "../src/components/layout/ClientLayout";
 import Dashboard from "./pages/client/ClientDashboard";
 import OrdersHistory from "./pages/client/OrderList";
 import CreateOrder from "./pages/client/CreateOrder";
-import OrderTracking from "./pages/client/OrderTracking";
+import OrderTracking from "./pages/client/TrackOrder";
 import Notifications from "./pages/client/Notifications";
 import OrderDetail from "./pages/client/OrderDetail";
 import ProfilePage from "./pages/client/ProfilePage";
+import PriceCalculator from "./pages/client/PriceCalculator";
 
-import LogistLayout from "./components/logist/LogistSidebar";
+import LogistLayout from "./components/layout/LogistLayout";
 import LogistDashboard from "./pages/logist/LogistDashboard";
 import LogistOrders from "./pages/logist/LogistOrders";
 import LogistRoutes from "./pages/logist/LogistRoutes";
 import CreateRoute from "./pages/logist/CreateRoute";
 import LogistVehicles from "./pages/logist/LogistVehicles";
-import LogistCouriers from "./pages/logist/LogistCouriers";
+import LogistCouriers from "./pages/logist/LogistCouries";
 import LogistReports from "./pages/logist/LogistReports";
+import RouteDetail from "./pages/logist/RouteDetail";
+import DeliveryChecks from "./pages/logist/DeliveryChecks";
+
+import CourierLayout from "./components/layout/CourierLayout";
+import CourierDashboard from "./pages/courier/CourierDashboard";
+import CourierRoute from "./pages/courier/CourierRoute";
+import CourierHistory from "./pages/courier/CourierHistory";
+import CourierProfile from "./pages/courier/CourierProfile";
 
 function App() {
   return (
@@ -63,67 +72,19 @@ function App() {
         />
 
         {/* CLIENT */}
-        <Route
-          path="/client"
-          element={
-            <ClientLayout>
-              <Dashboard />
-            </ClientLayout>
-          }
-        />
+        <Route path="/client" element={<Dashboard />} />
 
-        <Route
-          path="/client/create"
-          element={
-            <ClientLayout>
-              <CreateOrder />
-            </ClientLayout>
-          }
-        />
+        <Route path="/client/create" element={<CreateOrder />} />
 
-        <Route
-          path="/client/orders"
-          element={
-            <ClientLayout>
-              <OrdersHistory />
-            </ClientLayout>
-          }
-        />
+        <Route path="/client/orders" element={<OrdersHistory />} />
 
-        <Route
-          path="/client/track"
-          element={
-            <ClientLayout>
-              <OrderTracking />
-            </ClientLayout>
-          }
-        />
+        <Route path="/client/track" element={<OrderTracking />} />
 
-        <Route
-          path="/client/orders/:id"
-          element={
-            <ClientLayout>
-              <OrderDetail />
-            </ClientLayout>
-          }
-        />
+        <Route path="/client/orders/:id" element={<OrderDetail />} />
 
-        <Route
-          path="/client/notifications"
-          element={
-            <ClientLayout>
-              <Notifications />
-            </ClientLayout>
-          }
-        />
-        <Route
-          path="/profile"
-          element={
-            <ClientLayout>
-              <ProfilePage />
-            </ClientLayout>
-          }
-        />
+        <Route path="/client/notifications" element={<Notifications />} />
+        <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/client/calculator" element={<PriceCalculator />} />
         {/* LOGIST*/}
 
         <Route
@@ -131,6 +92,14 @@ function App() {
           element={
             <PrivateRoute>
               <LogistDashboard />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/logist/routes/:routeId/checks"
+          element={
+            <PrivateRoute>
+              <DeliveryChecks />
             </PrivateRoute>
           }
         />
@@ -179,6 +148,48 @@ function App() {
           element={
             <PrivateRoute>
               <LogistReports />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/logist/routes/:id"
+          element={
+            <PrivateRoute>
+              <RouteDetail />
+            </PrivateRoute>
+          }
+        />
+
+        {/* COURIER*/}
+        <Route
+          path="/courier"
+          element={
+            <PrivateRoute>
+              <CourierDashboard />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/courier/route"
+          element={
+            <PrivateRoute>
+              <CourierRoute />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/courier/history"
+          element={
+            <PrivateRoute>
+              <CourierHistory />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/courier/profile"
+          element={
+            <PrivateRoute>
+              <CourierProfile />
             </PrivateRoute>
           }
         />
