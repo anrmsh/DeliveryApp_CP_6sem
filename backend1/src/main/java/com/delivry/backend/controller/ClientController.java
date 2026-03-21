@@ -11,6 +11,7 @@ import com.delivry.backend.response.client.NotificationResponse;
 import com.delivry.backend.response.client.ProfileResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -52,11 +53,17 @@ public class ClientController {
         return clientService.calculatePrice(request);
     }
 
-    @PostMapping("/rating")
-    public void rateCourier(@RequestBody RatingRequest request) {
-        clientService.rateCourier(request);
-    }
+//    @PostMapping("/rating")
+//    public void rateCourier(@RequestBody RatingRequest request) {
+//        clientService.rateCourier(request);
+//    }
 
+
+    @PostMapping("/rating")
+    public ResponseEntity<?> rateCourier(@RequestBody RatingRequest request) {
+        clientService.rateCourier(request);
+        return ResponseEntity.ok().build();
+    }
     // ── Уведомления ───────────────────────────────────────────────────────
 
     /** Получить все уведомления текущего пользователя (новые первыми) */

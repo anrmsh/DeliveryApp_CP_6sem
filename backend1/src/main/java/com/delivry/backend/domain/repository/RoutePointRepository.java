@@ -27,5 +27,5 @@ public interface RoutePointRepository extends JpaRepository<RoutePoint, Long> {
     // Точки по конкретному заказу
     List<RoutePoint> findByOrderId(Long orderId);
 
-    List<Object> findByRouteIdOrderBySequenceNumber(Long id);
+    List<RoutePoint> findByRouteIdOrderBySequenceNumber(Long routeId);
 }

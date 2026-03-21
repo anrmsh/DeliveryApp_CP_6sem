@@ -1,11 +1,9 @@
 package com.delivry.backend.controller;
 
-
 import com.delivry.backend.application.service.LogistService;
-import com.delivry.backend.request.logist.*;
+import com.delivry.backend.request.logist.UpdateRouteStatusRequest;
 import com.delivry.backend.response.logist.*;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import jakarta.validation.Valid;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,18 +28,40 @@ public class LogistController {
         return logistService.getDashboard();
     }
 
-    // ── Заказы (необработанные) ────────────────────────────────────────────
+    // ── Заказы ────────────────────────────────────────────────────────────
 
     @GetMapping("/orders")
+    public List<OrderSummaryResponse> getAllOrders() {
+        return logistService.getAllOrders();
+    }
+
+    @GetMapping("/orders/pending")
     public List<OrderSummaryResponse> getPendingOrders() {
         return logistService.getPendingOrders();
     }
 
-    // ── Маршрутные листы ──────────────────────────────────────────────────
+    // ── Автопланирование ──────────────────────────────────────────────────
+
+    /**
+     * POST /api/logist/autoplan
+     * Система сама строит маршруты из необработанных заказов.
+     * Логист запускает и получает список черновиков для проверки.
+     */
+    @PostMapping("/autoplan")
+    public List<RouteSheetResponse> autoplan() {
+        return logistService.autoplan();
+    }
+
+    // ── Маршруты ──────────────────────────────────────────────────────────
 
     @GetMapping("/routes")
     public List<RouteSheetResponse> getRoutes() {
         return logistService.getRoutes();
+    }
+
+    @GetMapping("/routes/drafts")
+    public List<RouteSheetResponse> getDraftRoutes() {
+        return logistService.getDraftRoutes();
     }
 
     @GetMapping("/routes/{id}")
@@ -49,9 +69,22 @@ public class LogistController {
         return logistService.getRoute(id);
     }
 
-    @PostMapping("/routes")
-    public RouteSheetResponse createRoute(@Valid @RequestBody CreateRouteRequest request) {
-        return logistService.createRoute(request);
+    /**
+     * POST /api/logist/routes/{id}/approve
+     * Логист утверждает маршрут → статус "Активен", курьер получает задание.
+     */
+    @PostMapping("/routes/{id}/approve")
+    public RouteSheetResponse approveRoute(@PathVariable Long id) {
+        return logistService.approveRoute(id);
+    }
+
+    /**
+     * POST /api/logist/routes/{id}/reject
+     * Логист отклоняет маршрут → заказы возвращаются в очередь.
+     */
+    @PostMapping("/routes/{id}/reject")
+    public RouteSheetResponse rejectRoute(@PathVariable Long id) {
+        return logistService.rejectRoute(id);
     }
 
     @PatchMapping("/routes/{id}/status")
@@ -59,22 +92,6 @@ public class LogistController {
             @PathVariable Long id,
             @RequestBody UpdateRouteStatusRequest request) {
         return logistService.updateRouteStatus(id, request);
-    }
-
-    // ── Назначить заказ на маршрут ────────────────────────────────────────
-
-    @PostMapping("/routes/{routeId}/orders/{orderId}")
-    public RouteSheetResponse assignOrderToRoute(
-            @PathVariable Long routeId,
-            @PathVariable Long orderId) {
-        return logistService.assignOrderToRoute(routeId, orderId);
-    }
-
-    // ── Планировщик маршрута (алгоритм ближайшего соседа + OSRM) ──────────
-
-    @PostMapping("/routes/{id}/optimize")
-    public RouteSheetResponse optimizeRoute(@PathVariable Long id) {
-        return logistService.optimizeRoute(id);
     }
 
     // ── Автомобили ────────────────────────────────────────────────────────
@@ -98,7 +115,7 @@ public class LogistController {
         return logistService.getCourierRatings();
     }
 
-    // ── Отчётность ────────────────────────────────────────────────────────
+    // ── Отчёты ────────────────────────────────────────────────────────────
 
     @GetMapping("/reports")
     public ReportResponse getReport(

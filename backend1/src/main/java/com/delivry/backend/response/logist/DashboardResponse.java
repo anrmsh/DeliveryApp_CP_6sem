@@ -1,3 +1,6 @@
+// ── DashboardResponse.java — добавь поле draftRoutes ─────────────────────
+// Путь: response/logist/DashboardResponse.java
+
 package com.delivry.backend.response.logist;
 
 public class DashboardResponse {
@@ -7,15 +10,18 @@ public class DashboardResponse {
     private long totalVehicles;
     private long freeVehicles;
     private long totalCouriers;
+    private long draftRoutes;   // ← новое: маршруты ожидающие утверждения
 
     public DashboardResponse(long totalOrders, long pendingOrders, long activeRoutes,
-                             long totalVehicles, long freeVehicles, long totalCouriers) {
+                             long totalVehicles, long freeVehicles, long totalCouriers,
+                             long draftRoutes) {
         this.totalOrders   = totalOrders;
         this.pendingOrders = pendingOrders;
         this.activeRoutes  = activeRoutes;
         this.totalVehicles = totalVehicles;
         this.freeVehicles  = freeVehicles;
         this.totalCouriers = totalCouriers;
+        this.draftRoutes   = draftRoutes;
     }
 
     public long getTotalOrders()   { return totalOrders; }
@@ -24,4 +30,14 @@ public class DashboardResponse {
     public long getTotalVehicles() { return totalVehicles; }
     public long getFreeVehicles()  { return freeVehicles; }
     public long getTotalCouriers() { return totalCouriers; }
+    public long getDraftRoutes()   { return draftRoutes; }
 }
+
+
+// ── logistApi.js — добавь новые методы ───────────────────────────────────
+// Добавь в src/api/logistApi.js:
+
+// export const autoplan    = ()   => axiosClient.post("/logist/autoplan").then(r => r.data);
+// export const approveRoute = (id) => axiosClient.post(`/logist/routes/${id}/approve`).then(r => r.data);
+// export const rejectRoute  = (id) => axiosClient.post(`/logist/routes/${id}/reject`).then(r => r.data);
+// export const getDrafts    = ()   => axiosClient.get("/logist/routes/drafts").then(r => r.data);

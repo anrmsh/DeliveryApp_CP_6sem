@@ -26,43 +26,50 @@ public class ClientService {
 
     private final UserRepository           userRepository;
     private final RouteSheetRepository     routeSheetRepository;
+    private final RoutePointRepository     routePointRepository;
     private final DeliveryOrderRepository  orderRepository;
-    private final CourierRatingsRepository ratingRepository;
+    private final CourierRatingsRepository courierRatingsRepository; // ← добавлен
     private final ClientRepository         clientRepository;
     private final DeliveryStatusRepository statusRepository;
     private final NotificationRepository   notificationRepository;
     private final PasswordEncoder          passwordEncoder;
 
-    private static final double BASE_PRICE_PER_KM_CAR   = 25.0;
-    private static final double BASE_PRICE_PER_KM_VAN   = 45.0;
-    private static final double BASE_PRICE_PER_KM_TRUCK = 80.0;
-    private static final double AVG_SPEED_KMH            = 30.0;
-    private static final double RUSH_HOUR_MULTIPLIER     = 1.35;
+    private static final double PRICE_PER_KM_CAR   = 0.80;
+    private static final double PRICE_PER_KM_VAN   = 1.40;
+    private static final double PRICE_PER_KM_TRUCK = 2.20;
+    private static final double BASE_PRICE_CAR      = 3.50;
+    private static final double BASE_PRICE_VAN      = 6.00;
+    private static final double BASE_PRICE_TRUCK    = 10.00;
+    private static final double AVG_SPEED_KMH       = 30.0;
+    private static final double RUSH_HOUR_MUL       = 1.35;
 
     public ClientService(
             DeliveryOrderRepository  orderRepository,
-            CourierRatingsRepository ratingRepository,
+            CourierRatingsRepository courierRatingsRepository,
             ClientRepository         clientRepository,
             DeliveryStatusRepository statusRepository,
             UserRepository           userRepository,
             RouteSheetRepository     routeSheetRepository,
+            RoutePointRepository     routePointRepository,
             NotificationRepository   notificationRepository,
             PasswordEncoder          passwordEncoder
     ) {
-        this.orderRepository        = orderRepository;
-        this.ratingRepository       = ratingRepository;
-        this.clientRepository       = clientRepository;
-        this.statusRepository       = statusRepository;
-        this.userRepository         = userRepository;
-        this.routeSheetRepository   = routeSheetRepository;
-        this.notificationRepository = notificationRepository;
-        this.passwordEncoder        = passwordEncoder;
+        this.orderRepository          = orderRepository;
+        this.courierRatingsRepository = courierRatingsRepository;
+        this.clientRepository         = clientRepository;
+        this.statusRepository         = statusRepository;
+        this.userRepository           = userRepository;
+        this.routeSheetRepository     = routeSheetRepository;
+        this.routePointRepository     = routePointRepository;
+        this.notificationRepository   = notificationRepository;
+        this.passwordEncoder          = passwordEncoder;
     }
 
     // ── CREATE ORDER ──────────────────────────────────────────────────────
 
     public DeliveryOrderResponse createOrder(CreateOrderRequest request) {
-        Client client = getCurrentClient();
+        Client client  = getCurrentClient();
+        User   current = getCurrentUser();
 
         DeliveryStatus status = statusRepository
                 .findByName("Создан")
@@ -78,8 +85,20 @@ public class ClientService {
         order.setStatus(status);
         orderRepository.save(order);
 
+        // Уведомить всех логистов о новом заказе
+        userRepository.findAll().stream()
+                .filter(u -> u.getRole() != null && "LOGIST".equals(u.getRole().getName()))
+                .forEach(logist -> createNotification(
+                        logist,
+                        "Новый заказ #" + order.getId(),
+                        "Клиент " + current.getFullName() +
+                                " создал заказ: " + order.getPickupAddress() +
+                                " → " + order.getDeliveryAddress()
+                ));
+
+        // Уведомить самого клиента
         createNotification(
-                getCurrentUser(),
+                current,
                 "Заказ #" + order.getId() + " создан",
                 "Ваша заявка принята. Логист назначит курьера в ближайшее время."
         );
@@ -94,7 +113,7 @@ public class ClientService {
         return orderRepository
                 .findByClientUserId(client.getUserId())
                 .stream()
-                .map(DeliveryOrderResponse::from)
+                .map(o -> enrichOrder(DeliveryOrderResponse.from(o), o.getId()))
                 .toList();
     }
 
@@ -104,7 +123,32 @@ public class ClientService {
         DeliveryOrder order = orderRepository
                 .findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Order not found: " + id));
-        return DeliveryOrderResponse.from(order);
+        return enrichOrder(DeliveryOrderResponse.from(order), id);
+    }
+
+    /**
+     * Обогащает ответ данными курьера и транспорта из маршрутного листа.
+     * Решает проблему "Данные курьера недоступны" на странице заказа клиента.
+     */
+    private DeliveryOrderResponse enrichOrder(DeliveryOrderResponse resp, Long orderId) {
+        routePointRepository.findAll().stream()
+                .filter(p -> p.getOrder() != null && p.getOrder().getId().equals(orderId))
+                .findFirst()
+                .ifPresent(point -> {
+                    RouteSheet route = point.getRoute();
+                    if (route == null) return;
+                    resp.setRouteId(route.getId());
+                    if (route.getCourier() != null) {
+                        resp.setCourierId(route.getCourier().getId());
+                        resp.setCourierName(route.getCourier().getFullName());
+                        resp.setCourierPhone(route.getCourier().getPhone());
+                    }
+                    if (route.getVehicle() != null) {
+                        resp.setVehicleModel(route.getVehicle().getModel());
+                        resp.setVehiclePlate(route.getVehicle().getPlateNumber());
+                    }
+                });
+        return resp;
     }
 
     // ── CALCULATE PRICE ───────────────────────────────────────────────────
@@ -123,21 +167,28 @@ public class ClientService {
             distanceKm = 10.0;
         }
 
-        double pricePerKm = switch (
-                request.getVehicleType() != null ? request.getVehicleType().toLowerCase() : "car") {
-            case "van"   -> BASE_PRICE_PER_KM_VAN;
-            case "truck" -> BASE_PRICE_PER_KM_TRUCK;
-            default      -> BASE_PRICE_PER_KM_CAR;
+        String vt = request.getVehicleType() != null
+                ? request.getVehicleType().toLowerCase() : "car";
+
+        double pricePerKm = switch (vt) {
+            case "van"   -> PRICE_PER_KM_VAN;
+            case "truck" -> PRICE_PER_KM_TRUCK;
+            default      -> PRICE_PER_KM_CAR;
+        };
+        double basePrice = switch (vt) {
+            case "van"   -> BASE_PRICE_VAN;
+            case "truck" -> BASE_PRICE_TRUCK;
+            default      -> BASE_PRICE_CAR;
         };
 
-        double trafficMul   = isRushHour() ? RUSH_HOUR_MULTIPLIER : 1.0;
+        double trafficMul   = isRushHour() ? RUSH_HOUR_MUL : 1.0;
         double weatherMul   = weatherMultiplier(request.getWeatherCode());
         double baseMinutes  = (distanceKm / AVG_SPEED_KMH) * 60.0;
         int    totalMinutes = (int) Math.round(baseMinutes * trafficMul * weatherMul);
-        double price        = distanceKm * pricePerKm * weatherMul;
+        double price        = basePrice + distanceKm * pricePerKm * weatherMul;
 
         return new DeliveryPriceResponse(
-                Math.round(price),
+                (long) (Math.round(price * 100.0) / 100.0),
                 totalMinutes,
                 distanceKm,
                 trafficMul,
@@ -147,24 +198,21 @@ public class ClientService {
 
     // ── RATE COURIER ──────────────────────────────────────────────────────
 
-    public void rateCourier(RatingRequest request) {
+    public void rateCourier(RatingRequest req) {
         Client client = getCurrentClient();
 
-        User courier = userRepository
-                .findById(request.getCourierId())
-                .orElseThrow(() -> new IllegalArgumentException("Courier not found: " + request.getCourierId()));
-
-        RouteSheet route = routeSheetRepository
-                .findById(request.getRouteId())
-                .orElseThrow(() -> new IllegalArgumentException("Route not found: " + request.getRouteId()));
-
         CourierRating rating = new CourierRating();
-        rating.setCourier(courier);
+        rating.setCourier(userRepository.findById(req.getCourierId())
+                .orElseThrow(() -> new IllegalArgumentException("Courier not found: " + req.getCourierId())));
         rating.setClient(client);
-        rating.setRoute(route);
-        rating.setRating(request.getRating());
-        rating.setComment(request.getComment());
-        ratingRepository.save(rating);
+        if (req.getRouteId() != null) {
+            routeSheetRepository.findById(req.getRouteId())
+                    .ifPresent(rating::setRoute);
+        }
+        rating.setRating(req.getRating());
+        rating.setComment(req.getComment());
+        rating.setCreatedAt(LocalDateTime.now());
+        courierRatingsRepository.save(rating); // ← теперь есть репозиторий
     }
 
     // ── NOTIFICATIONS ─────────────────────────────────────────────────────
@@ -187,17 +235,13 @@ public class ClientService {
 
     public void markAllNotificationsRead() {
         Long userId = SecurityUtils.getCurrentUserId();
-        notificationRepository.markAllReadByUserId(userId);
-    }
-
-    public void createNotification(User user, String title, String message) {
-        Notification n = new Notification();
-        n.setUser(user);
-        n.setTitle(title);
-        n.setMessage(message);
-        n.setStatusNotification(0);
-        n.setCreatedAt(LocalDateTime.now());
-        notificationRepository.save(n);
+        notificationRepository.findAll().stream()
+                .filter(n -> n.getUser() != null && n.getUser().getId().equals(userId))
+                .filter(n -> n.getStatusNotification() != null && n.getStatusNotification() == 0)
+                .forEach(n -> {
+                    n.setStatusNotification(1);
+                    notificationRepository.save(n);
+                });
     }
 
     // ── PROFILE ───────────────────────────────────────────────────────────
@@ -214,53 +258,51 @@ public class ClientService {
         User   user   = getCurrentUser();
         Client client = getClientByUserId(userId);
 
-        // User fields
-        if (request.getFullName() != null && !request.getFullName().isBlank()) {
+        if (request.getFullName() != null && !request.getFullName().isBlank())
             user.setFullName(request.getFullName());
-        }
-        if (request.getPhone() != null) {
+        if (request.getPhone() != null)
             user.setPhone(request.getPhone());
-        }
-
-        // Client fields (company) — frontend sends empty string when not legal entity
-        if (request.getCompanyName() != null) {
+        if (request.getCompanyName() != null)
             client.setCompanyName(request.getCompanyName());
-        }
-        if (request.getContactPerson() != null) {
+        if (request.getContactPerson() != null)
             client.setContactPerson(request.getContactPerson());
-        }
-        if (request.getNotes() != null) {
+        if (request.getNotes() != null)
             client.setNotes(request.getNotes());
-        }
 
         userRepository.save(user);
         clientRepository.save(client);
-
         return ProfileResponse.from(user, client);
     }
 
     public void changePassword(ChangePasswordRequest request) {
         User user = getCurrentUser();
-
-        if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPasswordHash())) {
+        if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPasswordHash()))
             throw new IllegalArgumentException("Неверный текущий пароль");
-        }
-
         user.setPasswordHash(passwordEncoder.encode(request.getNewPassword()));
         userRepository.save(user);
     }
 
     // ── HELPERS ───────────────────────────────────────────────────────────
 
+    public void createNotification(User user, String title, String message) {
+        Notification n = new Notification();
+        n.setUser(user);
+        n.setTitle(title);
+        n.setMessage(message);
+        n.setStatusNotification(0);
+        n.setCreatedAt(LocalDateTime.now());
+        notificationRepository.save(n);
+    }
+
     private Client getCurrentClient() {
         Long userId = SecurityUtils.getCurrentUserId();
         return clientRepository.findById(userId)
-                .orElseThrow(() -> new IllegalStateException("Client not found for userId: " + userId));
+                .orElseThrow(() -> new IllegalStateException("Client not found: " + userId));
     }
 
     private Client getClientByUserId(Long userId) {
         return clientRepository.findById(userId)
-                .orElseThrow(() -> new IllegalStateException("Client not found for userId: " + userId));
+                .orElseThrow(() -> new IllegalStateException("Client not found: " + userId));
     }
 
     private User getCurrentUser() {
@@ -273,20 +315,20 @@ public class ClientService {
         final double R = 6371.0;
         double dLat = Math.toRadians(lat2 - lat1);
         double dLon = Math.toRadians(lon2 - lon1);
-        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2)
+        double a    = Math.sin(dLat/2) * Math.sin(dLat/2)
                 + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
-                * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+                * Math.sin(dLon/2) * Math.sin(dLon/2);
         return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     }
 
     private static boolean isRushHour() {
-        int hour = LocalTime.now().getHour();
-        return (hour >= 7 && hour <= 9) || (hour >= 17 && hour <= 20);
+        int h = LocalTime.now().getHour();
+        return (h >= 7 && h <= 9) || (h >= 17 && h <= 20);
     }
 
-    private static double weatherMultiplier(Integer weatherCode) {
-        if (weatherCode == null) return 1.0;
-        return switch (weatherCode) {
+    private static double weatherMultiplier(Integer code) {
+        if (code == null) return 1.0;
+        return switch (code) {
             case 45, 48     -> 1.15;
             case 51, 53, 55 -> 1.10;
             case 61, 63     -> 1.15;
