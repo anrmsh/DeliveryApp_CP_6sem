@@ -1,10 +1,8 @@
-// ═══════════════════════════════════════════════════════════════════
-// LogistOrders.jsx  —  src/pages/logist/LogistOrders.jsx
-// ═══════════════════════════════════════════════════════════════════
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import LogistLayout from "../../components/layout/LogistLayout";
 import axiosClient from "../../api/axiosClient";
+import { fmtDate, fmtDateTime } from "../../utils/dateUtils";
 import "../../styles/logist/LogistOrders.css";
 
 const STATUS_META = {
@@ -121,12 +119,12 @@ export default function LogistOrders() {
                   <StatusBadge status={o.status} />
                   <div className="lgo-date">
                     <i className="bx bx-calendar" />
-                    {o.createdAt ? new Date(o.createdAt).toLocaleDateString("ru-RU") : "—"}
+                    {fmtDate(o.createdAt)}
                   </div>
                   {o.requestedTime && (
                     <div className="lgo-requested">
                       <i className="bx bx-time" />
-                      {new Date(o.requestedTime).toLocaleString("ru-RU")}
+                      {fmtDateTime(o.requestedTime)}
                     </div>
                   )}
                 </div>

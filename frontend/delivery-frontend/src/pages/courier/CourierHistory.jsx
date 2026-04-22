@@ -1,6 +1,4 @@
-// ═══════════════════════════════════════════════════════════════════
-// CourierHistory.jsx  —  src/pages/courier/CourierHistory.jsx
-// ═══════════════════════════════════════════════════════════════════
+
 import { useEffect, useState } from "react";
 import CourierLayout from "../../components/layout/CourierLayout";
 import axiosClient from "../../api/axiosClient";

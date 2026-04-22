@@ -62,10 +62,14 @@ export default function LandingPage() {
             <a href="#how">Как работает</a>
             <a href="#stats">О нас</a>
           </nav>
-          <div className="lp-nav-cta">
+           <div className="lp-nav-cta">
             <button className="lp-btn-ghost" onClick={() => navigate("/login")}>Войти</button>
-            <button className="lp-btn-primary" onClick={() => navigate("/register")}>Начать</button>
-          </div>
+            
+          </div> 
+
+
+
+          
         </div>
       </header>
 
@@ -80,19 +84,20 @@ export default function LandingPage() {
           <span className="lp-hero-badge">🟢 Работаем 24/7 по всему городу</span>
           <h1 className="lp-hero-title">
             Доставка, которая<br />
-            <em>думает за вас</em>
+            <em>всегда приходит вовремя</em>
           </h1>
           <p className="lp-hero-sub">
-            Интеллектуальная система планирования маршрутов с учётом пробок и погоды.
-            Точные сроки. Прозрачные цены. Живое отслеживание.
+           Управляйте заказами, отслеживайте курьеров в реальном времени
+          и координируйте логистику в едином кабинете.
           </p>
           <div className="lp-hero-actions">
-            <button className="lp-btn-primary lp-btn-lg" onClick={() => navigate("/register")}>
+            <button className="lp-btn-primary lp-btn-lg" onClick={() => navigate("/login")}>
               Оформить доставку →
             </button>
-            <button className="lp-btn-ghost lp-btn-lg" onClick={() => navigate("/login")}>
-              Войти в кабинет
-            </button>
+            <div className="lp-btn-ghost lp-btn-lg">  
+          <a href="#features"  className="hp-btn-secondary" >Узнать подробнее</a>
+          </div>
+
           </div>
           <div className="lp-hero-trucks">
             <VehicleSVG type="car" />
@@ -200,7 +205,7 @@ export default function LandingPage() {
       <section className="lp-cta">
         <div className="lp-cta-inner">
           <h2>Готовы к первой доставке?</h2>
-          <p>Зарегистрируйтесь бесплатно и оформите заказ за 2 минуты</p>
+          <p>Зарегистрируйтесь и оформите заказ за 2 минуты</p>
           <button className="lp-btn-primary lp-btn-lg" onClick={() => navigate("/register")}>
             Создать аккаунт →
           </button>

@@ -34,6 +34,8 @@ import LogistCouriers from "./pages/logist/LogistCouries";
 import LogistReports from "./pages/logist/LogistReports";
 import RouteDetail from "./pages/logist/RouteDetail";
 import DeliveryChecks from "./pages/logist/DeliveryChecks";
+import LogistNotifications from "./pages/logist/LogistNotifications";
+import LogistCalendar from "./pages/logist/LogistCalendar";
 
 import CourierLayout from "./components/layout/CourierLayout";
 import CourierDashboard from "./pages/courier/CourierDashboard";
@@ -41,11 +43,16 @@ import CourierRoute from "./pages/courier/CourierRoute";
 import CourierHistory from "./pages/courier/CourierHistory";
 import CourierProfile from "./pages/courier/CourierProfile";
 
+import LandingPage from "./pages/LandingPage";
+import HomePage from "./pages/HomePage";
+
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Navigate to="/login" />} />
+        {/* <Route path="/" element={<Navigate to="/login" />} /> */}
+
+        <Route path="/" element={<LandingPage/>} />
 
         <Route path="/login" element={<LoginPage />} />
 
@@ -144,6 +151,14 @@ function App() {
           }
         />
         <Route
+          path="/logist/calendar"
+          element={
+            <PrivateRoute>
+              <LogistCalendar />
+            </PrivateRoute>
+          }
+        />
+        <Route
           path="/logist/reports"
           element={
             <PrivateRoute>
@@ -152,10 +167,35 @@ function App() {
           }
         />
         <Route
+          path="/logist/notifications"
+          element={
+            <PrivateRoute>
+              <LogistNotifications />
+            </PrivateRoute>
+          }
+        />
+        <Route
           path="/logist/routes/:id"
           element={
             <PrivateRoute>
               <RouteDetail />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/logist/routes/:routeId"
+          element={
+            <PrivateRoute>
+              <RouteDetail />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/logist/routes/:routeId/checks"
+          element={
+            <PrivateRoute>
+              <DeliveryChecks />
             </PrivateRoute>
           }
         />

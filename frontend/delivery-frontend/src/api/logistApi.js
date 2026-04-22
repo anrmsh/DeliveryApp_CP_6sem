@@ -25,3 +25,9 @@ export const getCouriers = () => axiosClient.get("/logist/couriers").then(r => r
 export const getCourierRatings = () => axiosClient.get("/logist/couriers/ratings").then(r => r.data);
 
 export const getReport = (period) => axiosClient.get(`/logist/reports?period=${period}`).then(r => r.data);
+
+export const getLogistNotifications = () => axiosClient.get("/logist/notifications").then(r => r.data);
+
+export const markLogistNotificationRead = (id) => axiosClient.patch(`/logist/notifications/${id}/read`);
+
+export const markAllLogistNotificationsRead = () => axiosClient.patch("/logist/notifications/read-all");

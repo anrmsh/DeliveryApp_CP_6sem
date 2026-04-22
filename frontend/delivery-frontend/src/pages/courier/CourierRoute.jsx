@@ -59,6 +59,8 @@ export default function CourierRoute() {
   const [loading,      setLoading]      = useState(true);
   const [weather,      setWeather]      = useState(null);
   const [mapReady,     setMapReady]     = useState(false);
+  const [courierPos,   setCourierPos]   = useState(null);
+  const [geoAllowed,   setGeoAllowed]   = useState(false);
   const [updating,     setUpdating]     = useState(null);
   const [completing,   setCompleting]   = useState(false);
   const [starting,     setStarting]     = useState(false);
@@ -69,7 +71,6 @@ export default function CourierRoute() {
   const mapRef       = useRef(null);
   const mapObjRef    = useRef(null);
   const carMarkerRef = useRef(null);
-  const routeCoordsRef = useRef([]);
   const carAnimRef   = useRef(null);
 
   /* Load route */
@@ -90,6 +91,19 @@ export default function CourierRoute() {
   }, []);
 
   useEffect(() => { loadRoute(); }, [loadRoute]);
+
+  useEffect(() => {
+    if (!navigator.geolocation) return undefined;
+    const watchId = navigator.geolocation.watchPosition(
+      ({ coords }) => {
+        setCourierPos({ lat: coords.latitude, lng: coords.longitude });
+        setGeoAllowed(true);
+      },
+      () => setGeoAllowed(false),
+      { enableHighAccuracy: true, maximumAge: 10000, timeout: 15000 }
+    );
+    return () => navigator.geolocation.clearWatch(watchId);
+  }, []);
 
   /* Load Leaflet */
   useEffect(() => {
@@ -167,19 +181,21 @@ export default function CourierRoute() {
       } catch {
         L.polyline(coordList, { color: "#15803d", weight: 4, opacity: 0.6 }).addTo(map);
       }
-      routeCoordsRef.current = routeCoords;
-
-      /* Car marker */
+      /* Courier marker */
       const isActive = route.status === "Активен";
-      if (isActive && routeCoords.length > 1) {
+      const markerCoords = courierPos ? [courierPos.lat, courierPos.lng] : routeCoords[0];
+      if (isActive && markerCoords) {
         const carIcon = L.divIcon({
           className: "",
-          html: `<div class="cr-map-car"><i class="bx bxs-car"></i></div>`,
-          iconSize: [36, 36], iconAnchor: [18, 18],
+          html: `<div class="cr-map-car"><i class="bx bxs-navigation"></i></div>`,
+          iconSize: [40, 40], iconAnchor: [20, 20],
         });
-        const carMarker = L.marker(routeCoords[0], { icon: carIcon, zIndexOffset: 1000 }).addTo(map);
+        const carMarker = L.marker(markerCoords, { icon: carIcon, zIndexOffset: 1000 }).addTo(map);
+        carMarker.bindPopup(geoAllowed ? "<b>Вы на маршруте</b>" : "<b>Текущая метка курьера</b>");
         carMarkerRef.current = carMarker;
-        startCarAnimation(carMarker, routeCoords);
+        if (!courierPos && routeCoords.length > 1) {
+          startCarAnimation(carMarker, routeCoords);
+        }
       }
 
       /* Point markers */
@@ -201,9 +217,12 @@ export default function CourierRoute() {
         allBounds.push([parseFloat(p.latitude), parseFloat(p.longitude)]);
       });
 
+      if (courierPos) {
+        allBounds.push([courierPos.lat, courierPos.lng]);
+      }
       if (allBounds.length > 1) map.fitBounds(L.latLngBounds(allBounds), { padding: [30, 30] });
     })();
-  }, [mapReady, route]);
+  }, [courierPos, geoAllowed, mapReady, route]);
 
   /* Cleanup animation on unmount */
   useEffect(() => () => { if (carAnimRef.current) cancelAnimationFrame(carAnimRef.current); }, []);
@@ -255,6 +274,7 @@ export default function CourierRoute() {
   const total   = (route?.points || []).length;
   const pct     = total > 0 ? Math.round((done / total) * 100) : 0;
   const allDone = done === total && total > 0;
+  const nextPoint = (route?.points || []).find((p) => p.status === "Ожидается");
 
   /* Курьер ещё не взял маршрут — показываем кнопку "Взять в работу" */
   const isNotStarted = route && route.status === "Активен" && !route.actualStartTime;
@@ -350,6 +370,23 @@ export default function CourierRoute() {
         )}
 
         {/* Progress */}
+        <div className="cr-summary-grid">
+          <div className="cr-summary-card">
+            <span>Следующая точка</span>
+            <strong>{nextPoint ? `#${nextPoint.sequenceNumber}` : "Маршрут завершён"}</strong>
+            <p>{nextPoint?.address || "Все точки маршрутного листа уже обработаны."}</p>
+          </div>
+          <div className="cr-summary-card">
+            <span>Метка курьера</span>
+            <strong>{geoAllowed && courierPos ? "Онлайн" : "Ориентировочная"}</strong>
+            <p>
+              {geoAllowed && courierPos
+                ? "На карте показана фактическая геопозиция курьера."
+                : "Если геолокация недоступна, метка отображается по траектории маршрута."}
+            </p>
+          </div>
+        </div>
+
         <div className="cr-progress-card">
           <div className="cr-progress-top">
             <span className="cr-progress-label">Прогресс маршрута</span>
@@ -369,6 +406,12 @@ export default function CourierRoute() {
           <div className="cr-map-wrap">
             <div ref={mapRef} className="cr-map"/>
             {!mapReady && <div className="cr-map-loading"><div className="cr-spinner"/></div>}
+          </div>
+          <div className="cr-map-hint">
+            <i className="bx bx-current-location"/>
+            {geoAllowed && courierPos
+              ? "Метка курьера обновляется по геолокации браузера."
+              : "Для живой метки разрешите доступ к геолокации в браузере."}
           </div>
         </div>
 

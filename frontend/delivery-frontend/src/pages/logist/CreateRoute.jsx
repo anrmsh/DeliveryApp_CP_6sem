@@ -1,6 +1,4 @@
-// ═══════════════════════════════════════════════════════════════════
-// CreateRoute.jsx  —  src/pages/logist/CreateRoute.jsx
-// ═══════════════════════════════════════════════════════════════════
+
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import LogistLayout from "../../components/layout/LogistLayout";

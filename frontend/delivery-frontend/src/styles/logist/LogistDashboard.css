@@ -229,3 +229,100 @@
     background-position: -200% 0;
   }
 }
+
+
+/* Добавь в LogistDashboard.css */
+
+.lgd-main-grid {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 20px;
+  align-items: start;
+  margin-top: 24px;
+}
+@media (max-width: 900px) { .lgd-main-grid { grid-template-columns: 1fr; } }
+
+.lgd-panel {
+  background: rgba(255,255,255,0.97);
+  border: 1px solid #dbeafe;
+  border-radius: 18px;
+  padding: 20px 22px;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.04);
+}
+.lgd-panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+.lgd-panel-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #1e3a5f;
+}
+.lgd-notif-badge {
+  background: #ef4444; color: #fff;
+  font-size: 0.65rem; font-weight: 700;
+  min-width: 18px; height: 18px;
+  border-radius: 99px; padding: 0 5px;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.lgd-panel-link {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 0.78rem; font-weight: 600; color: #2563eb;
+  background: none; border: none; cursor: pointer;
+}
+.lgd-panel-link:hover { text-decoration: underline; }
+
+/* Notif list */
+.lgd-notif-list { display: flex; flex-direction: column; }
+.lgd-notif-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 10px 0; border-bottom: 1px solid #dbeafe;
+  cursor: pointer; position: relative; transition: background 0.15s;
+}
+.lgd-notif-item:last-child { border-bottom: none; }
+.lgd-notif-item--unread { background: rgba(37,99,235,0.03); margin: 0 -22px; padding: 10px 22px; }
+.lgd-notif-item--unread:hover { background: rgba(37,99,235,0.06); }
+
+.lgd-notif-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+.lgd-notif-icon--green { color: #16a34a; }
+.lgd-notif-icon--amber { color: #d97706; }
+.lgd-notif-icon--blue  { color: #2563eb; }
+.lgd-notif-icon--red   { color: #dc2626; }
+.lgd-notif-icon--muted { color: #9ca3af; }
+
+.lgd-notif-body { flex: 1; min-width: 0; }
+.lgd-notif-title { font-size: 0.84rem; font-weight: 600; color: #1e3a5f; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.lgd-notif-msg   { font-size: 0.76rem; color: #6b7280; margin-bottom: 2px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.lgd-notif-time  { font-size: 0.7rem; color: #9ca3af; }
+.lgd-unread-dot  { width: 8px; height: 8px; border-radius: 50%; background: #2563eb; flex-shrink: 0; margin-top: 6px; }
+
+.lgd-notif-skels { display: flex; flex-direction: column; gap: 8px; }
+.lgd-nskel { height: 64px; background: linear-gradient(90deg,#dbeafe 25%,#f0f4ff 50%,#dbeafe 75%); background-size:200% 100%; animation:shimmer 1.4s infinite; border-radius:10px; }
+@keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+
+.lgd-notif-empty { text-align: center; padding: 32px 0; color: #9ca3af; }
+.lgd-notif-empty i { font-size: 1.8rem; color: #dbeafe; display: block; margin-bottom: 8px; }
+.lgd-notif-empty p { font-size: 0.84rem; }
+
+/* Actions */
+.lgd-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.lgd-action-btn {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  padding: 14px 8px; border-radius: 14px;
+  border: 1px solid #dbeafe; background: #f8faff;
+  font-family: 'DM Sans', sans-serif; font-size: 0.78rem; font-weight: 600;
+  color: #1e3a5f; cursor: pointer; transition: all 0.18s;
+}
+.lgd-action-btn i { font-size: 1.3rem; color: #2563eb; }
+.lgd-action-btn:hover { background: #dbeafe; border-color: #2563eb; }
+.lgd-action-btn--accent {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8); color: #fff;
+  border-color: transparent; grid-column: 1 / -1;
+}
+.lgd-action-btn--accent i { color: #fff; }
+.lgd-action-btn--accent:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(37,99,235,0.3); }

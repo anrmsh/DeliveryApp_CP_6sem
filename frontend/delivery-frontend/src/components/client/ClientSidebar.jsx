@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import axiosClient from "../../api/axiosClient";
 import "../../styles/client/ClientSidebar.css";
 
-// ← Убран дубликат "Калькулятор" — уникальные ключи
+
 const NAV_ITEMS = [
   { to: "/client",               icon: "bx bx-home-alt",    label: "Главная"       },
   { to: "/client/create",        icon: "bx bx-package",     label: "Новый заказ"  },

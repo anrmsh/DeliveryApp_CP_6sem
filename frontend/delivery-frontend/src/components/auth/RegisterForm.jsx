@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { registerUser } from "../../api/authApi";
-import OAuthButtons from "./OAuthButtons";
 import { Link, useNavigate } from "react-router-dom";
+import OAuthButtons from "./OAuthButtons";
 
 /* ─── helpers ─── */
 const capitalize = (s) =>
@@ -237,7 +237,12 @@ const RegisterForm = () => {
 
         <button type="submit" className="btn">Зарегистрироваться</button>
 
-        <OAuthButtons />
+        <div className="oauth-register-block">
+          <div className="oauth-divider">
+            <span>Или продолжить через</span>
+          </div>
+          <OAuthButtons />
+        </div>
 
         <p>Уже есть аккаунт? <Link to="/login">Войти</Link></p>
       </form>
@@ -261,6 +266,32 @@ const RegisterForm = () => {
 
       <style>{`
         .input-box { position: relative; margin-top: 22px; }
+
+        .oauth-register-block {
+          margin-top: 18px;
+        }
+
+        .oauth-divider {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          margin-top: 6px;
+          color: #6b7280;
+          font-size: 13px;
+          text-align: center;
+        }
+
+        .oauth-divider::before,
+        .oauth-divider::after {
+          content: "";
+          flex: 1;
+          height: 1px;
+          background: linear-gradient(90deg, rgba(199,250,182,0), rgba(125,223,100,0.9), rgba(199,250,182,0));
+        }
+
+        .oauth-divider span {
+          white-space: nowrap;
+        }
 
         .input-box.input-error input {
           border-color: #ef4444 !important;
