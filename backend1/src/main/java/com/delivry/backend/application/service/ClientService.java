@@ -28,7 +28,7 @@ public class ClientService {
     private final RouteSheetRepository     routeSheetRepository;
     private final RoutePointRepository     routePointRepository;
     private final DeliveryOrderRepository  orderRepository;
-    private final CourierRatingsRepository courierRatingsRepository; // ← добавлен
+    private final CourierRatingsRepository courierRatingsRepository;
     private final ClientRepository         clientRepository;
     private final DeliveryStatusRepository statusRepository;
     private final NotificationRepository   notificationRepository;
@@ -65,7 +65,7 @@ public class ClientService {
         this.passwordEncoder          = passwordEncoder;
     }
 
-    // ── CREATE ORDER ──────────────────────────────────────────────────────
+    // ── CREATE ORDER ───
 
     public DeliveryOrderResponse createOrder(CreateOrderRequest request) {
         Client client  = getCurrentClient();
@@ -106,7 +106,7 @@ public class ClientService {
         return DeliveryOrderResponse.from(order);
     }
 
-    // ── MY ORDERS ─────────────────────────────────────────────────────────
+
 
     public List<DeliveryOrderResponse> getMyOrders() {
         Client client = getCurrentClient();
@@ -117,7 +117,7 @@ public class ClientService {
                 .toList();
     }
 
-    // ── SINGLE ORDER ──────────────────────────────────────────────────────
+
 
     public DeliveryOrderResponse getOrder(Long id) {
         DeliveryOrder order = orderRepository
@@ -126,10 +126,7 @@ public class ClientService {
         return enrichOrder(DeliveryOrderResponse.from(order), id);
     }
 
-    /**
-     * Обогащает ответ данными курьера и транспорта из маршрутного листа.
-     * Решает проблему "Данные курьера недоступны" на странице заказа клиента.
-     */
+
     private DeliveryOrderResponse enrichOrder(DeliveryOrderResponse resp, Long orderId) {
         routePointRepository.findAll().stream()
                 .filter(p -> p.getOrder() != null && p.getOrder().getId().equals(orderId))
@@ -151,7 +148,7 @@ public class ClientService {
         return resp;
     }
 
-    // ── CALCULATE PRICE ───────────────────────────────────────────────────
+
 
     public DeliveryPriceResponse calculatePrice(CreateOrderRequest request) {
         double distanceKm;
@@ -196,7 +193,7 @@ public class ClientService {
         );
     }
 
-    // ── RATE COURIER ──────────────────────────────────────────────────────
+
 
     public void rateCourier(RatingRequest req) {
         Client client = getCurrentClient();
@@ -212,10 +209,10 @@ public class ClientService {
         rating.setRating(req.getRating());
         rating.setComment(req.getComment());
         rating.setCreatedAt(LocalDateTime.now());
-        courierRatingsRepository.save(rating); // ← теперь есть репозиторий
+        courierRatingsRepository.save(rating);
     }
 
-    // ── NOTIFICATIONS ─────────────────────────────────────────────────────
+
 
     public List<NotificationResponse> getNotifications() {
         Long userId = SecurityUtils.getCurrentUserId();
@@ -244,7 +241,7 @@ public class ClientService {
                 });
     }
 
-    // ── PROFILE ───────────────────────────────────────────────────────────
+
 
     public ProfileResponse getProfile() {
         Long   userId = SecurityUtils.getCurrentUserId();
@@ -282,7 +279,7 @@ public class ClientService {
         userRepository.save(user);
     }
 
-    // ── HELPERS ───────────────────────────────────────────────────────────
+
 
     public void createNotification(User user, String title, String message) {
         Notification n = new Notification();

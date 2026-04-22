@@ -9,6 +9,8 @@ import com.delivry.backend.domain.repository.UserStatusRepository;
 import com.delivry.backend.infrastructure.security.JwtTokenUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.*;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
+    private static final Logger log = LoggerFactory.getLogger(AuthController.class);
 
     @Autowired private AuthenticationManager authenticationManager;
     @Autowired private JwtTokenUtil jwtTokenUtil;
@@ -44,6 +47,7 @@ public class AuthController {
             );
 
             User user = userRepository.findByEmail(auth.getName()).orElseThrow();
+            log.info("User logged in: email={} role={}", user.getEmail(), user.getRole().getName());
 
             return ResponseEntity.ok(
                     new JwtResponse(
@@ -54,6 +58,7 @@ public class AuthController {
                     )
             );
         } catch (BadCredentialsException e) {
+            log.error("Login failed: email={} reason=bad_credentials", request.getEmail());
             return ResponseEntity.badRequest().body("Неверный email или пароль");
         }
     }
@@ -69,6 +74,7 @@ public class AuthController {
         }
 
         // Если используешь JWT, можно на фронте просто удалить токен из localStorage
+        log.info("User logged out");
         return ResponseEntity.noContent().build();
     }
 
@@ -81,12 +87,13 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
 
-        // 1. Проверка уникальности email
+        //  Проверка уникальности email
         if (userRepository.existsByEmail(request.getEmail())) {
+            log.error("Registration failed: email={} reason=email_exists", request.getEmail());
             return ResponseEntity.badRequest().body("Email уже занят");
         }
 
-        // 2. Определяем роль (по умолчанию — Клиент)
+        // Определяем роль (по умолчанию — Клиент)
         String roleName = (request.getRoleName() != null)
                 ? request.getRoleName()
                 : "CLIENT";
@@ -94,11 +101,11 @@ public class AuthController {
         Role role = roleRepository.findByName(roleName)
                 .orElseThrow(() -> new RuntimeException("Роль не найдена: " + roleName));
 
-        // 3. Статус «Активен» по умолчанию
+        // Статус «Активен» по умолчанию
         UserStatus activeStatus = userStatusRepository.findByName("Активен")
                 .orElseThrow(() -> new RuntimeException("Статус 'Активен' не найден"));
 
-        // 4. Создаём пользователя
+        //  Создаём пользователя
         User user = new User();
         user.setEmail(request.getEmail());
         user.setPasswordHash(passwordEncoder.encode(request.getPassword()));
@@ -108,13 +115,15 @@ public class AuthController {
         user.setStatus(activeStatus);
         userRepository.save(user);
 
-        // 5. Если роль — Клиент, создаём запись в таблице client
+        // Если роль — Клиент, создаём запись в таблице client
         if ("CLIENT".equals(roleName)) {
             Client client = new Client();
             client.setUser(user);
 
             clientRepository.save(client);
         }
+
+        log.info("User registered: email={} role={}", user.getEmail(), user.getRole().getName());
 
         return ResponseEntity.ok("Регистрация прошла успешно");
     }

@@ -1,13 +1,17 @@
 package com.delivry.backend.application.service;
 
+import com.delivry.backend.application.pattern.factory.NotificationFactory;
 import com.delivry.backend.domain.entity.*;
 import com.delivry.backend.domain.enums.DeliveryStatus;
 import com.delivry.backend.domain.enums.RouteStatus;
 import com.delivry.backend.domain.repository.*;
 import com.delivry.backend.infrastructure.security.SecurityUtils;
 import com.delivry.backend.request.logist.UpdateRouteStatusRequest;
+import com.delivry.backend.response.client.NotificationResponse;
 import com.delivry.backend.response.logist.*;
 import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -17,6 +21,8 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 public class LogistService {
+
+    private static final Logger log = LoggerFactory.getLogger(LogistService.class);
 
     private final DeliveryOrderRepository    orderRepository;
     private final RouteSheetRepository       routeSheetRepository;
@@ -28,6 +34,8 @@ public class LogistService {
     private final RouteStatusRepository      routeStatusRepository;
     private final RoutePlanningService       planningService;
     private final NotificationRepository     notificationRepository;
+    private final NotificationFactory        notificationFactory;
+
 
     public LogistService(
             DeliveryOrderRepository  orderRepository,
@@ -39,7 +47,8 @@ public class LogistService {
             DeliveryStatusRepository deliveryStatusRepository,
             RouteStatusRepository    routeStatusRepository,
             RoutePlanningService     planningService,
-            NotificationRepository notificationRepository
+            NotificationRepository notificationRepository,
+            NotificationFactory notificationFactory
     ) {
         this.orderRepository          = orderRepository;
         this.routeSheetRepository     = routeSheetRepository;
@@ -51,11 +60,13 @@ public class LogistService {
         this.routeStatusRepository    = routeStatusRepository;
         this.planningService          = planningService;
         this.notificationRepository = notificationRepository;
+        this.notificationFactory = notificationFactory;
     }
 
-    // ── DASHBOARD ─────────────────────────────────────────────────────────
+
 
     public DashboardResponse getDashboard() {
+        log.info("event=logist_dashboard userId={}", SecurityUtils.getCurrentUserId());
         long totalOrders   = orderRepository.count();
         long pendingOrders = countByStatusName(orderRepository, "Создан");
         long activeRoutes  = routeSheetRepository.countByStatusName("Активен");
@@ -70,7 +81,7 @@ public class LogistService {
         );
     }
 
-    // ── ORDERS ────────────────────────────────────────────────────────────
+
 
     public List<OrderSummaryResponse> getPendingOrders() {
         return orderRepository.findAll().stream()
@@ -89,20 +100,18 @@ public class LogistService {
                 .toList();
     }
 
-    // ── AUTO PLANNING ──────────────────────────────────────────────────────
 
-    /**
-     * Запустить автопланирование — система сама строит маршруты.
-     * Логист только смотрит результат и утверждает.
-     */
     public List<RouteSheetResponse> autoplan() {
+        Long userId = SecurityUtils.getCurrentUserId();
+        log.info("event=autoplan_started userId={}", userId);
         List<RouteSheet> routes = planningService.planRoutes();
+        log.info("event=autoplan_completed userId={} routesCreated={}", userId, routes.size());
         return routes.stream()
                 .map(r -> RouteSheetResponse.from(r, loadPoints(r.getId())))
                 .toList();
     }
 
-    // ── ROUTES ────────────────────────────────────────────────────────────
+
 
     public List<RouteSheetResponse> getRoutes() {
         return routeSheetRepository.findAll().stream()
@@ -126,10 +135,7 @@ public class LogistService {
         return RouteSheetResponse.from(route, loadPoints(id));
     }
 
-    /**
-     * Утвердить маршрут — логист одобряет, статус меняется на "Активен".
-     * Уведомление курьеру отправляется здесь.
-     */
+
     public RouteSheetResponse approveRoute(Long id) {
         RouteSheet route = findRoute(id);
 
@@ -145,8 +151,10 @@ public class LogistService {
         RouteStatus active = routeStatusRepository.findByName("Активен")
                 .orElseThrow(() -> new IllegalStateException("Status 'Активен' not found"));
         route.setStatus(active);
+        log.info("event=route_approved routeId={} logistId={} courierId={}",
+                id, logistId, route.getCourier() != null ? route.getCourier().getId() : null);
 
-        // Mark vehicle in use
+
         if (route.getVehicle() != null) {
             route.getVehicle().getStatus().setName("В рейсе");
             vehicleRepository.save(route.getVehicle());
@@ -154,7 +162,7 @@ public class LogistService {
 
         routeSheetRepository.save(route);
 
-        // ── УВЕДОМЛЕНИЕ КУРЬЕРУ ──────────────────────────────────────────
+
         if (route.getCourier() != null) {
             int pointsCount = routePointRepository
                     .findByRouteIdOrderBySequenceNumber(route.getId()).size();
@@ -177,9 +185,7 @@ public class LogistService {
         return RouteSheetResponse.from(route, loadPoints(id));
     }
 
-    /**
-     * Отклонить маршрут — заказы возвращаются в статус "Создан".
-     */
+
     public RouteSheetResponse rejectRoute(Long id) {
         RouteSheet route = findRoute(id);
 
@@ -188,7 +194,7 @@ public class LogistService {
         route.setStatus(cancelled);
         routeSheetRepository.save(route);
 
-        // Return orders to "Создан"
+
         DeliveryStatus created = deliveryStatusRepository.findByName("Создан")
                 .orElseThrow(() -> new IllegalStateException("Status 'Создан' not found"));
 
@@ -217,7 +223,7 @@ public class LogistService {
         return RouteSheetResponse.from(route, loadPoints(id));
     }
 
-    // ── VEHICLES ──────────────────────────────────────────────────────────
+
 
     public List<VehicleResponse> getVehicles(String statusFilter, String sort) {
         List<Vehicle> vehicles = vehicleRepository.findAll();
@@ -236,7 +242,7 @@ public class LogistService {
         return vehicles.stream().map(VehicleResponse::from).toList();
     }
 
-    // ── COURIERS ──────────────────────────────────────────────────────────
+
 
     public List<CourierResponse> getCouriers() {
         return userRepository.findAll().stream()
@@ -287,7 +293,7 @@ public class LogistService {
                 .toList();
     }
 
-    // ── REPORTS ───────────────────────────────────────────────────────────
+
 
     public ReportResponse getReport(String period) {
         LocalDateTime from = switch (period) {
@@ -315,7 +321,7 @@ public class LogistService {
                 Math.round(totalKm * 10) / 10.0, ordersDelivered);
     }
 
-    // ── HELPERS ───────────────────────────────────────────────────────────
+
 
     private List<RoutePoint> loadPoints(Long routeId) {
         return routePointRepository.findByRouteIdOrderBySequenceNumber(routeId);
@@ -333,12 +339,46 @@ public class LogistService {
     }
 
     private void createNotification(User user, String title, String message) {
-        Notification n = new Notification();
-        n.setUser(user);
-        n.setTitle(title);
-        n.setMessage(message);
-        n.setStatusNotification(0);
-        n.setCreatedAt(java.time.LocalDateTime.now());
+        Notification n = notificationFactory.create(user, title, message);
         notificationRepository.save(n);
+        log.info("event=notification_created userId={} title={}", user.getId(), title);
+    }
+
+
+
+    public List<CourierRatingDetailResponse> getCourierRatingDetails(Long courierId) {
+
+        return ratingRepository
+                .findAll()
+                .stream()
+                .filter(r -> r.getCourier() != null && r.getCourier().getId().equals(courierId))
+                .sorted(Comparator.comparing(CourierRating::getCreatedAt).reversed())
+                .map(CourierRatingDetailResponse::from)
+                .toList();
+    }
+
+    // Уведомления для логиста
+    public List<NotificationResponse> getNotifications() {
+        Long userId = SecurityUtils.getCurrentUserId();
+        return notificationRepository
+                .findByUserIdOrderByCreatedAtDesc(userId)
+                .stream()
+                .map(NotificationResponse::from)
+                .toList();
+    }
+
+    public void markNotificationRead(Long id) {
+        Long userId = SecurityUtils.getCurrentUserId();
+        notificationRepository.findByIdAndUserId(id, userId).ifPresent(n -> {
+            n.setStatusNotification(1);
+            notificationRepository.save(n);
+            log.info("event=logist_notification_read userId={} notificationId={}", userId, id);
+        });
+    }
+
+    public void markAllNotificationsRead() {
+        Long userId = SecurityUtils.getCurrentUserId();
+        notificationRepository.markAllReadByUserId(userId);
+        log.info("event=logist_notifications_read_all userId={}", userId);
     }
 }

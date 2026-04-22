@@ -69,7 +69,7 @@ public class DeliveryCheckResponse {
         return r;
     }
 
-    // Getters
+
     public Long   getRouteId()           { return routeId; }
     public String getCourierName()       { return courierName; }
     public String getCourierPhone()      { return courierPhone; }

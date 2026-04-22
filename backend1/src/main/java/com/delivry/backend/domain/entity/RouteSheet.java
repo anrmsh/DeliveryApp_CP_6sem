@@ -40,6 +40,9 @@ public class RouteSheet {
     @Column(name = "planned_end")
     private java.time.LocalDateTime plannedEnd;
 
+    @Column(name = "actual_start")
+    private java.time.LocalDateTime actualStart;
+
     @Column(name = "actual_distance_km")
     private Double actualDistanceKm;
 
@@ -108,6 +111,14 @@ public class RouteSheet {
 
     public void setActualDistanceKm(Double actualDistanceKm) {
         this.actualDistanceKm = actualDistanceKm;
+    }
+
+    public LocalDateTime getActualStart() {
+        return actualStart;
+    }
+
+    public void setActualStart(LocalDateTime actualStart) {
+        this.actualStart = actualStart;
     }
 
     public LocalDateTime getCreatedAt() {

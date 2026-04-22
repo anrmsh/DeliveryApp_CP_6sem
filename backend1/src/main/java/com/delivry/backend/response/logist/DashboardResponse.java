@@ -34,10 +34,3 @@ public class DashboardResponse {
 }
 
 
-// ── logistApi.js — добавь новые методы ───────────────────────────────────
-// Добавь в src/api/logistApi.js:
-
-// export const autoplan    = ()   => axiosClient.post("/logist/autoplan").then(r => r.data);
-// export const approveRoute = (id) => axiosClient.post(`/logist/routes/${id}/approve`).then(r => r.data);
-// export const rejectRoute  = (id) => axiosClient.post(`/logist/routes/${id}/reject`).then(r => r.data);
-// export const getDrafts    = ()   => axiosClient.get("/logist/routes/drafts").then(r => r.data);

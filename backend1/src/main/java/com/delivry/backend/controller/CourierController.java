@@ -1,5 +1,6 @@
 package com.delivry.backend.controller;
 
+import com.delivry.backend.application.pattern.facade.CourierRouteFacade;
 import com.delivry.backend.application.service.CourierService;
 import com.delivry.backend.request.courier.CompleteRouteRequest;
 import com.delivry.backend.request.courier.UpdatePointStatusRequest;
@@ -17,12 +18,14 @@ import java.util.List;
 public class CourierController {
 
     private final CourierService courierService;
+    private final CourierRouteFacade courierRouteFacade;
 
-    public CourierController(CourierService courierService) {
+    public CourierController(CourierService courierService, CourierRouteFacade courierRouteFacade) {
         this.courierService = courierService;
+        this.courierRouteFacade = courierRouteFacade;
     }
 
-    // ── Dashboard ─────────────────────────────────────────────────────────
+    // ── Dashboard ──
 
     @GetMapping("/dashboard")
     public CourierDashboardResponse getDashboard() {
@@ -34,7 +37,7 @@ public class CourierController {
     /** Активный маршрут курьера (статус "Активен") */
     @GetMapping("/route/current")
     public CourierRouteResponse getCurrentRoute() {
-        return courierService.getCurrentRoute();
+        return courierRouteFacade.getCurrentRoute();
     }
 
     // ── Отметить точку ────────────────────────────────────────────────────
@@ -48,7 +51,7 @@ public class CourierController {
     public CourierRouteResponse updatePointStatus(
             @PathVariable Long pointId,
             @RequestBody UpdatePointStatusRequest request) {
-        return courierService.updatePointStatus(pointId, request);
+        return courierRouteFacade.updatePointStatus(pointId, request);
     }
 
     // ── Завершить маршрут ─────────────────────────────────────────────────
@@ -62,7 +65,7 @@ public class CourierController {
     public CourierRouteResponse completeRoute(
             @PathVariable Long routeId,
             @RequestBody CompleteRouteRequest request) {
-        return courierService.completeRoute(routeId, request);
+        return courierRouteFacade.completeRoute(routeId, request);
     }
 
     // ── Уведомления ───────────────────────────────────────────────────────
@@ -99,6 +102,6 @@ public class CourierController {
     // POST /api/courier/route/{routeId}/start
     @PostMapping("/route/{routeId}/start")
     public CourierRouteResponse startRoute(@PathVariable Long routeId) {
-        return courierService.startRoute(routeId);
+        return courierRouteFacade.startRoute(routeId);
     }
 }

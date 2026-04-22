@@ -14,6 +14,7 @@ public class CourierRouteResponse {
     private String vehiclePlate;
     private LocalDateTime plannedStart;
     private LocalDateTime plannedEnd;
+    private LocalDateTime actualStartTime;
     private Double actualDistanceKm;
     private List<PointDto> points;
 
@@ -23,6 +24,7 @@ public class CourierRouteResponse {
         resp.status          = r.getStatus() != null ? r.getStatus().getName() : null;
         resp.plannedStart    = r.getPlannedStart();
         resp.plannedEnd      = r.getPlannedEnd();
+        resp.actualStartTime = r.getActualStart();
         resp.actualDistanceKm = r.getActualDistanceKm();
         if (r.getVehicle() != null) {
             resp.vehicleModel = r.getVehicle().getModel();
@@ -38,6 +40,7 @@ public class CourierRouteResponse {
     public String getVehiclePlate()    { return vehiclePlate; }
     public LocalDateTime getPlannedStart()  { return plannedStart; }
     public LocalDateTime getPlannedEnd()    { return plannedEnd; }
+    public LocalDateTime getActualStartTime() { return actualStartTime; }
     public Double getActualDistanceKm()     { return actualDistanceKm; }
     public List<PointDto> getPoints()       { return points; }
 
@@ -61,8 +64,8 @@ public class CourierRouteResponse {
             d.sequenceNumber = p.getSequenceNumber();
             d.address        = p.getAddress();
             d.status         = p.getStatus() != null ? p.getStatus().getName() : null;
-            d.latitude       = BigDecimal.valueOf(p.getLatitude());
-            d.longitude      = BigDecimal.valueOf(p.getLongitude());
+            d.latitude       = p.getLatitude() != null ? BigDecimal.valueOf(p.getLatitude()) : null;
+            d.longitude      = p.getLongitude() != null ? BigDecimal.valueOf(p.getLongitude()) : null;
             d.plannedArrival = p.getPlannedArrival();
             d.actualArrival  = p.getActualArrival();
             if (p.getOrder() != null) {

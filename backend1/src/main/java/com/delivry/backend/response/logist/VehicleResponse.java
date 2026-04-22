@@ -1,8 +1,6 @@
 package com.delivry.backend.response.logist;
 
-// ═══════════════════════════════════════════════════════════════════
-// Путь: response/logist/VehicleResponse.java
-// ═══════════════════════════════════════════════════════════════════
+
 
 import com.delivry.backend.domain.entity.Vehicle;
 

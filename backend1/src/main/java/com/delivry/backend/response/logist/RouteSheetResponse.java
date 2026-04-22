@@ -22,10 +22,7 @@ public class RouteSheetResponse {
     private LocalDateTime       createdAt;
     private List<RoutePointDto> points;
 
-    /**
-     * Use this when you already have the route points loaded separately.
-     * Pass an empty list if not needed.
-     */
+
     public static RouteSheetResponse from(RouteSheet r, List<RoutePoint> routePoints) {
         RouteSheetResponse resp = new RouteSheetResponse();
         resp.id               = r.getId();
@@ -58,7 +55,7 @@ public class RouteSheetResponse {
         return resp;
     }
 
-    /** Convenience overload — no points */
+
     public static RouteSheetResponse from(RouteSheet r) {
         return from(r, Collections.emptyList());
     }
@@ -76,7 +73,7 @@ public class RouteSheetResponse {
     public LocalDateTime       getCreatedAt()        { return createdAt; }
     public List<RoutePointDto> getPoints()           { return points; }
 
-    // ── Nested DTO ────────────────────────────────────────────────────────
+
     public static class RoutePointDto {
         private Long   id;
         private int    sequenceNumber;

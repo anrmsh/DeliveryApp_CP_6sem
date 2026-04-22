@@ -32,9 +32,7 @@ public class AdminService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    // ─────────────────────────────────────────
-    // USER MANAGEMENT
-    // ─────────────────────────────────────────
+
 
     @Transactional(readOnly = true)
     public Page<AdminUserResponse> getAllUsers(String roleName, String statusName, Pageable pageable) {
@@ -115,9 +113,7 @@ public class AdminService {
         userRepository.delete(user);
     }
 
-    // ─────────────────────────────────────────
-    // HELPERS
-    // ─────────────────────────────────────────
+
 
     private User findUserOrThrow(Long id) {
         return userRepository.findById(id)

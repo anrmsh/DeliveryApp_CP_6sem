@@ -13,27 +13,26 @@ import com.delivry.backend.domain.repository.UserStatusRepository;
 import com.delivry.backend.infrastructure.security.JwtTokenUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 
-/**
- * Вызывается Spring автоматически после успешного входа через Google.
- *
- * Поток:
- *   Google → Spring → этот handler → redirect → http://localhost:3000/oauth2/callback?token=JWT
- */
+
 @Component
 public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
+    private static final Logger log = LoggerFactory.getLogger(OAuth2SuccessHandler.class);
 
-    // Куда редиректить фронт после успешного входа
-    //private static final String FRONTEND_REDIRECT = "http://localhost:3000/oauth2/callback";
-    // URL твоего React-приложения
+
     private static final String FRONTEND_REDIRECT = "http://localhost:5173/oauth-callback";
 
     private final UserRepository userRepository;
@@ -61,10 +60,13 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         OAuth2User oauthUser = (OAuth2User) authentication.getPrincipal();
 
-        String email = oauthUser.getAttribute("email");
-        String name  = oauthUser.getAttribute("name");
+        String provider = resolveProvider(authentication);
+        String email = resolveEmail(oauthUser, provider);
+        String name  = resolveDisplayName(oauthUser);
+        String oauthId = resolveOauthId(oauthUser, provider);
 
         if (email == null) {
+            log.error("OAuth2 login failed: provider={} reason=no_email", provider);
             response.sendRedirect(FRONTEND_REDIRECT + "?error=no_email");
             return;
         }
@@ -72,7 +74,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         // Найти существующего или создать нового пользователя
         User user = userRepository.findByEmail(email).orElseGet(() -> {
 
-            // Роль CLIENT — именно так хранится в БД
+            // Роль CLIENT
             Role clientRole = roleRepository.findByName("CLIENT")
                     .orElseThrow(() -> new RuntimeException("Роль CLIENT не найдена"));
 
@@ -83,22 +85,25 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
             newUser.setEmail(email);
             newUser.setFullName(name != null ? name : email);
             newUser.setPasswordHash(""); // пароля нет — вход только через Google
-            newUser.setOauthProvider("google");
-            newUser.setOauthId(oauthUser.getAttribute("sub")); // уникальный ID в Google
+            newUser.setOauthProvider(provider);
+            newUser.setOauthId(oauthId);
             newUser.setRole(clientRole);
             newUser.setStatus(activeStatus);
             userRepository.save(newUser);
 
-            // Создаём запись в таблице client (1:1 с user)
+
             Client client = new Client();
             client.setUser(newUser);
             clientRepository.save(client);
 
+            log.info("OAuth2 user registered: provider={} email={} role={}",
+                    provider, email, clientRole.getName());
             return newUser;
         });
 
-        // Проверяем не заблокирован ли аккаунт
+
         if ("Заблокирован".equals(user.getStatus().getName())) {
+            log.warn("Blocked OAuth2 login attempt: provider={} email={}", provider, email);
             response.sendRedirect(FRONTEND_REDIRECT + "?error=blocked");
             return;
         }
@@ -111,8 +116,59 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
                 )
         );
 
-        // Редирект на фронт с токеном
-        response.sendRedirect(FRONTEND_REDIRECT + "?token=" + token);
 
+        log.info("User logged in via OAuth2: provider={} email={} role={}",
+                provider, user.getEmail(), user.getRole().getName());
+        response.sendRedirect(FRONTEND_REDIRECT
+                + "?token=" + token
+                + "&email=" + encode(user.getEmail())
+                + "&fullName=" + encode(user.getFullName())
+                + "&role=" + encode(user.getRole().getName()));
+
+    }
+
+    private String resolveProvider(Authentication authentication) {
+        if (authentication instanceof OAuth2AuthenticationToken token) {
+            return token.getAuthorizedClientRegistrationId();
+        }
+        return "oauth2";
+    }
+
+    private String resolveEmail(OAuth2User oauthUser, String provider) {
+        String email = oauthUser.getAttribute("email");
+        if (email != null && !email.isBlank()) {
+            return email;
+        }
+        if ("github".equalsIgnoreCase(provider)) {
+            String login = oauthUser.getAttribute("login");
+            if (login != null && !login.isBlank()) {
+                return login + "@users.noreply.github.com";
+            }
+        }
+        return null;
+    }
+
+    private String resolveDisplayName(OAuth2User oauthUser) {
+        String name = oauthUser.getAttribute("name");
+        if (name != null && !name.isBlank()) {
+            return name;
+        }
+        String login = oauthUser.getAttribute("login");
+        if (login != null && !login.isBlank()) {
+            return login;
+        }
+        String email = oauthUser.getAttribute("email");
+        return email != null ? email : "OAuth User";
+    }
+
+    private String resolveOauthId(OAuth2User oauthUser, String provider) {
+        Object providerId = "google".equalsIgnoreCase(provider)
+                ? oauthUser.getAttribute("sub")
+                : oauthUser.getAttribute("id");
+        return providerId != null ? String.valueOf(providerId) : null;
+    }
+
+    private String encode(String value) {
+        return URLEncoder.encode(value == null ? "" : value, StandardCharsets.UTF_8);
     }
 }

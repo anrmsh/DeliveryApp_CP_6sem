@@ -66,7 +66,7 @@ public class ClientController {
     }
     // ── Уведомления ───────────────────────────────────────────────────────
 
-    /** Получить все уведомления текущего пользователя (новые первыми) */
+
     @GetMapping("/notifications")
     public List<NotificationResponse> getNotifications() {
         return clientService.getNotifications();

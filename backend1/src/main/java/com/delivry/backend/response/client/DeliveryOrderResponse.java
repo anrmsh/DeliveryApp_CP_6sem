@@ -15,7 +15,7 @@ public class DeliveryOrderResponse {
     private LocalDateTime requestedTime;
     private LocalDateTime createdAt;
 
-    // Курьер (заполняется через enrichOrder в ClientService)
+
     private Long   courierId;
     private String courierName;
     private String courierPhone;   // ← новое поле
@@ -23,7 +23,7 @@ public class DeliveryOrderResponse {
     // Маршрут
     private Long   routeId;
 
-    // Транспорт (заполняется через enrichOrder)
+    // Транспорт
     private String vehicleModel;   // ← новое поле
     private String vehiclePlate;   // ← новое поле
 
@@ -40,7 +40,7 @@ public class DeliveryOrderResponse {
         return r;
     }
 
-    // ── Getters ──────────────────────────────────────────────────────────
+
 
     public Long          getId()              { return id; }
     public String        getStatus()          { return status; }
@@ -57,7 +57,7 @@ public class DeliveryOrderResponse {
     public String        getVehicleModel()    { return vehicleModel; }
     public String        getVehiclePlate()    { return vehiclePlate; }
 
-    // ── Setters ──────────────────────────────────────────────────────────
+
 
     public void setId(Long id)                        { this.id = id; }
     public void setStatus(String s)                   { this.status = s; }

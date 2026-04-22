@@ -14,39 +14,35 @@ public class CreateOrderRequest {
     @NotBlank(message = "Delivery address is required")
     private String deliveryAddress;
 
-    /** Coordinates of the pickup point (from geocoder on frontend) */
+
     private Double latitude;
     private Double longitude;
 
-    /** Coordinates of the delivery point */
+
     private Double deliveryLatitude;
     private Double deliveryLongitude;
 
-    /** Requested delivery date-time (optional) */
+
     private LocalDateTime requestedTime;
 
-    // ── Cargo parameters (informational, sent by frontend) ──────────────
 
-    /** Weight in kilograms */
     private Double weightKg;
 
-    /** Dimensions in centimetres */
+
     private Double lengthCm;
     private Double widthCm;
     private Double heightCm;
 
-    /** Free-form comment */
+
     private String comment;
 
-    // ── Routing data pre-calculated by frontend (OSRM + Open-Meteo) ─────
 
-    /** Distance in km returned by OSRM */
     private Double distanceKm;
 
-    /** Open-Meteo WMO weather code at pickup point */
+
     private Integer weatherCode;
 
-    /** Vehicle type: "car" | "van" | "truck" */
+
     private String vehicleType;
 
     public String getPickupAddress() {

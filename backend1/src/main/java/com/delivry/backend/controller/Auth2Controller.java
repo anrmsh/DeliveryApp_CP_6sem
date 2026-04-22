@@ -10,6 +10,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.Collections;
 
@@ -22,7 +23,7 @@ public class Auth2Controller {
     private final UserStatusRepository userStatusRepository;
     private final JwtTokenUtil jwtTokenUtil;
 
-    // ← явный конструктор вместо @RequiredArgsConstructor
+
     public Auth2Controller(UserRepository userRepository,
                            RoleRepository roleRepository,
                            UserStatusRepository userStatusRepository,
@@ -71,8 +72,8 @@ public class Auth2Controller {
     }
 
     @GetMapping("/failure")
-    public ResponseEntity<?> oauthFailure() {
-        return ResponseEntity.badRequest().body("OAuth2 вход не выполнен");
+    public RedirectView oauthFailure() {
+        return new RedirectView("http://localhost:5173/login?oauthError=1");
     }
 
     @GetMapping("/login")
@@ -84,6 +85,6 @@ public class Auth2Controller {
     }
 }
 
-// ← вынесены из класса, теперь на уровне файла
+
 record OAuthResponse(String token, String fullName, String email) {}
 record OAuthLoginInfo(String message, String redirectUrl) {}

@@ -1,5 +1,7 @@
 package com.delivry.backend.application.service;
 
+import com.delivry.backend.application.pattern.factory.NotificationFactory;
+import com.delivry.backend.application.pattern.strategy.RoutePointStatusStrategy;
 import com.delivry.backend.domain.entity.*;
 import com.delivry.backend.domain.enums.DeliveryStatus;
 import com.delivry.backend.domain.enums.RoutePointStatus;
@@ -11,6 +13,8 @@ import com.delivry.backend.request.courier.CompleteRouteRequest;
 import com.delivry.backend.request.courier.UpdatePointStatusRequest;
 import com.delivry.backend.response.courier.*;
 import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -22,6 +26,8 @@ import java.util.List;
 @Transactional
 public class CourierService {
 
+    private static final Logger log = LoggerFactory.getLogger(CourierService.class);
+
     private final UserRepository             userRepository;
     private final RouteSheetRepository       routeSheetRepository;
     private final RoutePointRepository       routePointRepository;
@@ -31,6 +37,8 @@ public class CourierService {
     private final NotificationRepository     notificationRepository;
     private final VehicleRepository          vehicleRepository;
     private final CourierRatingsRepository   ratingsRepository;
+    private final NotificationFactory        notificationFactory;
+    private final List<RoutePointStatusStrategy> pointStatusStrategies;
 
     public CourierService(
             UserRepository             userRepository,
@@ -41,7 +49,9 @@ public class CourierService {
             DeliveryStatusRepository   deliveryStatusRepository,
             NotificationRepository     notificationRepository,
             VehicleRepository          vehicleRepository,
-            CourierRatingsRepository   ratingsRepository
+            CourierRatingsRepository   ratingsRepository,
+            NotificationFactory        notificationFactory,
+            List<RoutePointStatusStrategy> pointStatusStrategies
     ) {
         this.userRepository             = userRepository;
         this.routeSheetRepository       = routeSheetRepository;
@@ -52,34 +62,30 @@ public class CourierService {
         this.notificationRepository     = notificationRepository;
         this.vehicleRepository          = vehicleRepository;
         this.ratingsRepository          = ratingsRepository;
+        this.notificationFactory       = notificationFactory;
+        this.pointStatusStrategies     = pointStatusStrategies;
     }
 
-    // ── DASHBOARD ─────────────────────────────────────────────────────────
+
 
     public CourierDashboardResponse getDashboard() {
         Long courierId = SecurityUtils.getCurrentUserId();
+        log.info("event=courier_dashboard courierId={}", courierId);
 
-        long totalRoutes     = routeSheetRepository.findAll().stream()
-                .filter(r -> r.getCourier() != null && r.getCourier().getId().equals(courierId))
-                .count();
-        long completedRoutes = routeSheetRepository.findAll().stream()
-                .filter(r -> r.getCourier() != null && r.getCourier().getId().equals(courierId))
+        List<RouteSheet> courierRoutes = routeSheetRepository.findByCourierId(courierId);
+        long totalRoutes = courierRoutes.size();
+        long completedRoutes = courierRoutes.stream()
                 .filter(r -> r.getStatus() != null && "Завершён".equals(r.getStatus().getName()))
                 .count();
-        long activeRoutes    = routeSheetRepository.findAll().stream()
-                .filter(r -> r.getCourier() != null && r.getCourier().getId().equals(courierId))
+        long activeRoutes = courierRoutes.stream()
                 .filter(r -> r.getStatus() != null && "Активен".equals(r.getStatus().getName()))
                 .count();
 
-        double totalKm = routeSheetRepository.findAll().stream()
-                .filter(r -> r.getCourier() != null && r.getCourier().getId().equals(courierId))
+        double totalKm = courierRoutes.stream()
                 .filter(r -> r.getActualDistanceKm() != null)
                 .mapToDouble(RouteSheet::getActualDistanceKm).sum();
 
-        long unreadNotifications = notificationRepository.findAll().stream()
-                .filter(n -> n.getUser() != null && n.getUser().getId().equals(courierId))
-                .filter(n -> n.getStatusNotification() != null && n.getStatusNotification() == 0)
-                .count();
+        long unreadNotifications = notificationRepository.countByUserIdAndStatusNotification(courierId, 0);
 
         List<CourierRating> ratings = ratingsRepository.findByCourierId(courierId);
         double avgRating = ratings.stream()
@@ -96,14 +102,13 @@ public class CourierService {
         );
     }
 
-    // ── CURRENT ROUTE ─────────────────────────────────────────────────────
+
 
     public CourierRouteResponse getCurrentRoute() {
         Long courierId = SecurityUtils.getCurrentUserId();
+        log.info("event=courier_current_route courierId={}", courierId);
 
-        RouteSheet route = routeSheetRepository.findAll().stream()
-                .filter(r -> r.getCourier() != null && r.getCourier().getId().equals(courierId))
-                .filter(r -> r.getStatus() != null && "Активен".equals(r.getStatus().getName()))
+        RouteSheet route = routeSheetRepository.findByCourierIdAndStatusName(courierId, "Активен").stream()
                 .findFirst()
                 .orElse(null);
 
@@ -115,51 +120,29 @@ public class CourierService {
         return CourierRouteResponse.from(route, points);
     }
 
-    // ── UPDATE POINT STATUS ────────────────────────────────────────────────
+
 
     public CourierRouteResponse updatePointStatus(Long pointId, UpdatePointStatusRequest request) {
+        Long courierId = SecurityUtils.getCurrentUserId();
         RoutePoint point = routePointRepository.findById(pointId)
                 .orElseThrow(() -> new IllegalArgumentException("Point not found: " + pointId));
+
+        if (point.getRoute() == null || point.getRoute().getCourier() == null
+                || !courierId.equals(point.getRoute().getCourier().getId())) {
+            throw new IllegalStateException("Точка маршрута не принадлежит текущему курьеру");
+        }
 
         RoutePointStatus newStatus = routePointStatusRepository.findByName(request.getStatus())
                 .orElseThrow(() -> new IllegalArgumentException("Status not found: " + request.getStatus()));
 
         point.setStatus(newStatus);
+        log.info("event=route_point_status_updated courierId={} pointId={} status={}",
+                courierId, pointId, request.getStatus());
 
-        if ("Посещена".equals(request.getStatus())) {
-            point.setActualArrival(LocalDateTime.now());
-
-            // Update delivery order status
-            if (point.getOrder() != null) {
-                DeliveryStatus delivered = deliveryStatusRepository.findByName("Доставлен")
-                        .orElseThrow();
-                point.getOrder().setStatus(delivered);
-
-                // Notify client
-                DeliveryOrder order = point.getOrder();
-                if (order.getClient() != null && order.getClient().getUser() != null) {
-                    createNotification(
-                            order.getClient().getUser(),
-                            "Заказ #" + order.getId() + " доставлен",
-                            "Ваш заказ доставлен по адресу: " + order.getDeliveryAddress()
-                    );
-                }
-            }
-        }
-
-        if ("Пропущена".equals(request.getStatus())) {
-            if (point.getOrder() != null) {
-                // Notify client about skip
-                DeliveryOrder order = point.getOrder();
-                if (order.getClient() != null && order.getClient().getUser() != null) {
-                    createNotification(
-                            order.getClient().getUser(),
-                            "Доставка заказа #" + order.getId() + " не состоялась",
-                            "Курьер не смог доставить заказ по адресу: " + order.getDeliveryAddress() + ". Свяжитесь с поддержкой."
-                    );
-                }
-            }
-        }
+        pointStatusStrategies.stream()
+                .filter(strategy -> strategy.supports(request.getStatus()))
+                .findFirst()
+                .ifPresent(strategy -> strategy.apply(point));
 
         routePointRepository.save(point);
 
@@ -168,7 +151,7 @@ public class CourierService {
         return CourierRouteResponse.from(route, points);
     }
 
-    // ── COMPLETE ROUTE ────────────────────────────────────────────────────
+
 
     public CourierRouteResponse completeRoute(Long routeId, CompleteRouteRequest request) {
         Long courierId = SecurityUtils.getCurrentUserId();
@@ -190,14 +173,16 @@ public class CourierService {
         }
 
         routeSheetRepository.save(route);
+        log.info("event=route_completed courierId={} routeId={} actualDistanceKm={}",
+                courierId, routeId, request.getActualDistanceKm());
 
-        // Free vehicle
+
         if (route.getVehicle() != null) {
             route.getVehicle().getStatus().setName("Доступен");
             vehicleRepository.save(route.getVehicle());
         }
 
-        // Self-notification
+
         User courier = userRepository.findById(courierId).orElseThrow();
         createNotification(courier, "Маршрут #" + routeId + " завершён",
                 "Вы успешно завершили маршрут. Пробег: " +
@@ -207,7 +192,7 @@ public class CourierService {
         return CourierRouteResponse.from(route, points);
     }
 
-    // ── NOTIFICATIONS ─────────────────────────────────────────────────────
+
 
     public List<CourierNotificationResponse> getNotifications() {
         Long courierId = SecurityUtils.getCurrentUserId();
@@ -220,24 +205,21 @@ public class CourierService {
     }
 
     public void markNotificationRead(Long id) {
-        notificationRepository.findById(id).ifPresent(n -> {
+        Long courierId = SecurityUtils.getCurrentUserId();
+        notificationRepository.findByIdAndUserId(id, courierId).ifPresent(n -> {
             n.setStatusNotification(1);
             notificationRepository.save(n);
+            log.info("event=courier_notification_read courierId={} notificationId={}", courierId, id);
         });
     }
 
     public void markAllNotificationsRead() {
         Long courierId = SecurityUtils.getCurrentUserId();
-        notificationRepository.findAll().stream()
-                .filter(n -> n.getUser() != null && n.getUser().getId().equals(courierId))
-                .filter(n -> n.getStatusNotification() != null && n.getStatusNotification() == 0)
-                .forEach(n -> {
-                    n.setStatusNotification(1);
-                    notificationRepository.save(n);
-                });
+        notificationRepository.markAllReadByUserId(courierId);
+        log.info("event=courier_notifications_read_all courierId={}", courierId);
     }
 
-    // ── HISTORY ───────────────────────────────────────────────────────────
+
 
     public List<CourierRouteHistoryResponse> getRouteHistory() {
         Long courierId = SecurityUtils.getCurrentUserId();
@@ -251,7 +233,7 @@ public class CourierService {
                 .toList();
     }
 
-    // ── PROFILE ───────────────────────────────────────────────────────────
+
 
     public CourierProfileResponse getProfile() {
         Long courierId = SecurityUtils.getCurrentUserId();
@@ -263,16 +245,13 @@ public class CourierService {
         return CourierProfileResponse.from(user, Math.round(avg * 10.0) / 10.0, ratings.size());
     }
 
-    // ── HELPERS ───────────────────────────────────────────────────────────
+
 
     private void createNotification(User user, String title, String message) {
         Notification n = new Notification();
-        n.setUser(user);
-        n.setTitle(title);
-        n.setMessage(message);
-        n.setStatusNotification(0);
-        n.setCreatedAt(LocalDateTime.now());
+        n = notificationFactory.create(user, title, message);
         notificationRepository.save(n);
+        log.info("event=notification_created userId={} title={}", user.getId(), title);
     }
 
     public CourierRouteResponse startRoute(Long routeId) {
@@ -287,14 +266,15 @@ public class CourierService {
             throw new IllegalStateException("Маршрут уже начат или не активен");
         }
 
-        // Фиксируем фактическое время начала
-        route.setPlannedStart(LocalDateTime.now()); // или добавь поле actualStart
-        routeSheetRepository.save(route);
+        if (route.getActualStart() == null) {
+            route.setActualStart(LocalDateTime.now());
+            routeSheetRepository.save(route);
+            log.info("event=route_started courierId={} routeId={}", courierId, routeId);
 
-        // Уведомление самому себе
-        User courier = userRepository.findById(courierId).orElseThrow();
-        createNotification(courier, "Маршрут #" + routeId + " начат",
-                "Вы взяли маршрут в работу. Удачи!");
+            User courier = userRepository.findById(courierId).orElseThrow();
+            createNotification(courier, "Маршрут #" + routeId + " начат",
+                    "Вы взяли маршрут в работу. Удачи!");
+        }
 
         List<RoutePoint> points = routePointRepository.findByRouteIdOrderBySequenceNumber(routeId);
         return CourierRouteResponse.from(route, points);

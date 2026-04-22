@@ -2,8 +2,10 @@ package com.delivry.backend.controller;
 
 import com.delivry.backend.application.service.LogistService;
 import com.delivry.backend.request.logist.UpdateRouteStatusRequest;
+import com.delivry.backend.response.client.NotificationResponse;
 import com.delivry.backend.response.logist.*;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -121,5 +123,29 @@ public class LogistController {
     public ReportResponse getReport(
             @RequestParam(required = false, defaultValue = "month") String period) {
         return logistService.getReport(period);
+    }
+
+
+    @GetMapping("/couriers/{courierId}/ratings")
+    public List<CourierRatingDetailResponse> getCourierRatings(@PathVariable Long courierId) {
+        return logistService.getCourierRatingDetails(courierId);
+    }
+
+    // Добавь endpoint для уведомлений логиста:
+    @GetMapping("/notifications")
+    public List<NotificationResponse> getNotifications() {
+        return logistService.getNotifications();
+    }
+
+    @PatchMapping("/notifications/{id}/read")
+    public ResponseEntity<?> markRead(@PathVariable Long id) {
+        logistService.markNotificationRead(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/notifications/read-all")
+    public ResponseEntity<?> markAllRead() {
+        logistService.markAllNotificationsRead();
+        return ResponseEntity.ok().build();
     }
 }

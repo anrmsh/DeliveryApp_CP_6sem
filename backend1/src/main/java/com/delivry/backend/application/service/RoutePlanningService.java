@@ -13,17 +13,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
-/**
- * Автоматический планировщик маршрутов.
- *
- * Алгоритм (Vehicle Routing Problem — упрощённая версия):
- * 1. Берём все необработанные заказы (статус "Создан")
- * 2. Кластеризуем их по географической близости (K-Means по координатам)
- * 3. Для каждого кластера подбираем свободный автомобиль с достаточной грузоподъёмностью
- * 4. Назначаем свободного курьера
- * 5. Внутри кластера сортируем точки методом ближайшего соседа (Nearest Neighbour TSP)
- * 6. Учитываем запрошенное время доставки (deadline) — срочные заказы идут первыми
- */
+
 @Service
 @Transactional
 public class RoutePlanningService {
@@ -60,14 +50,9 @@ public class RoutePlanningService {
         this.routePointStatusRepository = routePointStatusRepository;
     }
 
-    // ── PUBLIC API ────────────────────────────────────────────────────────
 
-    /**
-     * Запустить автоматическое планирование.
-     * Возвращает список созданных маршрутов (статус "Запланирован", ждут утверждения логистом).
-     */
     public List<RouteSheet> planRoutes() {
-        // 1. Pending orders with coordinates
+
         List<DeliveryOrder> pending = orderRepository.findAll().stream()
                 .filter(o -> o.getStatus() != null && "Создан".equals(o.getStatus().getName()))
                 .filter(o -> o.getLatitude() != null && o.getLongitude() != null)
@@ -77,7 +62,7 @@ public class RoutePlanningService {
 
         if (pending.isEmpty()) return List.of();
 
-        // 2. Free vehicles
+
         List<Vehicle> freeVehicles = vehicleRepository.findAll().stream()
                 .filter(v -> v.getStatus() != null && "Доступен".equals(v.getStatus().getName()))
                 .sorted(Comparator.comparing(Vehicle::getCapacityKg,
@@ -86,7 +71,7 @@ public class RoutePlanningService {
 
         if (freeVehicles.isEmpty()) return List.of();
 
-        // 3. Free couriers
+
         List<User> freeCouriers = userRepository.findAll().stream()
                 .filter(u -> u.getRole() != null && "COURIER".equals(u.getRole().getName()))
                 .filter(u -> u.getStatus() != null && "Активен".equals(u.getStatus().getName()))
@@ -95,12 +80,12 @@ public class RoutePlanningService {
 
         if (freeCouriers.isEmpty()) return List.of();
 
-        // 4. How many routes can we create
+
         int routeCount = Math.min(freeVehicles.size(), freeCouriers.size());
         routeCount = Math.min(routeCount, (int) Math.ceil((double) pending.size() / 3));
         routeCount = Math.max(routeCount, 1);
 
-        // 5. Cluster orders into routeCount groups
+
         List<List<DeliveryOrder>> clusters = clusterOrders(pending, routeCount);
 
         RouteStatus plannedStatus = routeStatusRepository.findByName("Запланирован")
@@ -119,7 +104,7 @@ public class RoutePlanningService {
             Vehicle vehicle = freeVehicles.get(i % freeVehicles.size());
             User    courier = freeCouriers.get(i % freeCouriers.size());
 
-            // Planned time window
+
             LocalDateTime earliest = cluster.stream()
                     .map(DeliveryOrder::getRequestedTime)
                     .filter(Objects::nonNull)
@@ -134,12 +119,12 @@ public class RoutePlanningService {
             route.setPlannedEnd(earliest.plusHours(4));
             routeSheetRepository.save(route);
 
-            // Sort cluster by Nearest Neighbour TSP
+
             List<DeliveryOrder> sorted = nearestNeighbour(cluster);
 
             int seq = 1;
             for (DeliveryOrder order : sorted) {
-                // Mark order assigned
+
                 order.setStatus(assignedStatus);
                 orderRepository.save(order);
 
@@ -161,7 +146,7 @@ public class RoutePlanningService {
         return created;
     }
 
-    // ── K-MEANS CLUSTERING ────────────────────────────────────────────────
+    // ── K-MEANS CLUSTERING ────
 
     private List<List<DeliveryOrder>> clusterOrders(List<DeliveryOrder> orders, int k) {
         if (orders.size() <= k) {
@@ -223,7 +208,7 @@ public class RoutePlanningService {
         return clusters;
     }
 
-    // ── NEAREST NEIGHBOUR TSP ─────────────────────────────────────────────
+    // ── NEAREST NEIGHBOUR TSP ─────
 
     private List<DeliveryOrder> nearestNeighbour(List<DeliveryOrder> orders) {
         if (orders.size() <= 1) return new ArrayList<>(orders);
@@ -263,7 +248,7 @@ public class RoutePlanningService {
         return result;
     }
 
-    // ── HELPERS ───────────────────────────────────────────────────────────
+    // ── HELPERS ───
 
     private boolean hasPendingRoute(Long courierId) {
         return routeSheetRepository.findAll().stream()

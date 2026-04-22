@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface OrderRepository extends JpaRepository<DeliveryOrder, Long> {
 
-    // ← было findByClientId, теперь findByClientUserId
+
     Page<DeliveryOrder> findByClientUserId(Long clientUserId, Pageable pageable);
 
 }
